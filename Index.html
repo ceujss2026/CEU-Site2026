@@ -1,0 +1,3264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career Education Unit Site</title>
+
+  <link rel="preconnect" href="https://drive.google.com">
+  <link rel="preconnect" href="https://docs.google.com">
+  <link rel="preconnect" href="https://ssl.gstatic.com">
+
+  <style>
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #ffffff; color: #3c4043; -webkit-font-smoothing: antialiased; }
+
+    main { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+    .page-content { display: none; }
+    .page-content.active { display: block; }
+    .view-container-title { font-size: 28px; font-weight: 500; color: #1a1a1a; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+#login-container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    /* Your new background photo with a slight dark overlay to make inputs pop */
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                url('https://lh3.googleusercontent.com/d/11AQ-sQan_0865IvaCY7wkYj-s5YjrrrJ') no-repeat center center;
+    background-size: cover;
+}
+
+.login-box { 
+    background: rgba(255, 255, 255, 0.95); 
+    padding: 40px; 
+    border-radius: 12px; 
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25); 
+    width: 100%; 
+    max-width: 400px; 
+    text-align: center; 
+}
+
+.login-box h2 { margin-bottom: 20px; color: #0d3a58; font-weight: 600; }
+.login-box input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #dadce0; border-radius: 4px; font-size: 15px; box-sizing: border-box; }
+.login-box button { width: 100%; padding: 12px; background: #1a8cb6; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+.login-box button:hover { background: #147298; }
+#login-error { color: #d93025; margin-top: 10px; font-size: 14px; min-height: 20px; }
+
+#main-app { display: none; }
+
+    .top-info-alert-strip {
+      background-color: #1a8cb6; color: #ffffff; font-size: 11px; text-align: center;
+      padding: 6px 10px; letter-spacing: 0.3px; font-weight: 400;
+    }
+    .site-header {
+      background-color: #0d3a58; display: flex; justify-content: space-between;
+      align-items: center; padding: 12px 40px; position: relative; z-index: 1000;
+    }
+    .brand-block { display: flex; align-items: center; gap: 12px; color: #ffffff; text-decoration: none; }
+    .brand-logo { width: 32px; height: 32px; object-fit: contain; }
+    .brand-title { font-size: 15px; font-weight: 500; letter-spacing: 0.2px; }
+
+    .nav-menu-list { display: flex; list-style: none; align-items: center; gap: 4px; }
+    .nav-item { position: relative; }
+    .nav-link {
+      color: rgba(255, 255, 255, 0.85); text-decoration: none; font-size: 13px;
+      padding: 8px 12px; border-radius: 4px; transition: all 0.2s; font-weight: 500; cursor: pointer; display: block;
+    }
+    .nav-link:hover, .nav-link.active { color: #ffffff; background-color: rgba(255, 255, 255, 0.12); }
+    
+.dropdown-container {
+  position: absolute; 
+  top: 100%; 
+  right: 0; 
+  background-color: #ffffff;
+  min-width: 230px; 
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+  border-radius: 4px;
+  padding: 6px 0; 
+  display: none; 
+  z-index: 2000; 
+  margin-top: 4px; /* Keeps your clean visual spacing */
+}
+
+.dropdown-container::before {
+  content: '';
+  position: absolute;
+  top: -10px; /* Reaches up across the margin gap to touch the nav link */
+  left: 0;
+  width: 100%;
+  height: 10px;
+  background: transparent; /* Remains completely invisible to users */
+}
+
+.dropdown-container a {
+  display: block; color: #3c4043; padding: 10px 18px; text-decoration: none;
+  font-size: 13px; transition: background 0.15s; text-align: left;
+}
+.dropdown-container a:hover { background-color: #f1f3f4; color: #1a8cb6; }
+.nav-item:hover .dropdown-container { display: block; }
+
+    .logout-nav-btn {
+      background-color: #d93025; color: #ffffff !important; font-weight: 600 !important; border-radius: 4px; margin-left: 10px;
+    }
+    .logout-nav-btn:hover { background-color: #b3261e !important; }
+
+.dynamic-hero-banner {
+  background-color: #1f1f1f;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+  background-size: 20px 20px;
+  color: #ffffff; 
+  text-align: center; 
+  
+  padding: 30px 20px; 
+  
+  position: relative; 
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.hero-inner-content { max-width: 900px; margin: 0 auto; }
+.hero-title-top { font-size: 28px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; }
+.hero-accent-line { width: 320px; height: 4px; background-color: #1a8cb6; margin: 0 auto 16px auto; }
+.hero-title-main { font-size: 34px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.hero-title-sub { font-size: 24px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; opacity: 0.9; }
+
+.home-section-strip { 
+  text-align: center; 
+  padding: 12px 20px; 
+  margin-bottom: 0px; 
+}
+.home-section-strip.alt-bg { background-color: #f8fafc; border-radius: 4px; }
+
+.home-section-heading { 
+  font-size: 20px; 
+  font-weight: 700; 
+  color: #0d3a58; 
+  letter-spacing: 0.5px; 
+  margin-bottom: 6px; 
+  text-transform: uppercase; 
+}
+.home-section-body { font-size: 13.5px; line-height: 1.7; color: #5f6368; max-width: 850px; margin: 0 auto; }
+
+    .institution-card-matrix { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 20px; }
+    .profile-matrix-item { background: #ffffff; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 10px; }
+    .matrix-item-top-row { display: flex; align-items: center; gap: 15px; width: 100%; margin-bottom: 15px; text-align: left; justify-content: center; }
+    .matrix-item-logo { width: 75px; height: 75px; object-fit: contain; flex-shrink: 0; }
+    .matrix-item-meta-text { font-size: 11.5px; color: #5f6368; line-height: 1.5; }
+    .matrix-item-meta-text strong { color: #202124; display: block; font-size: 12px; margin-bottom: 2px; }
+    .matrix-item-bold-title { font-size: 13px; font-weight: 700; color: #202124; margin: 12px 0; text-transform: uppercase; letter-spacing: 0.3px; line-height: 1.4; }
+    
+    .matrix-action-icons-row { display: flex; gap: 12px; margin-bottom: 16px; }
+    .matrix-circle-icon-btn {
+      width: 28px; height: 28px; border-radius: 50%; background-color: #5f6368; color: #ffffff;
+      display: inline-flex; align-items: center; justify-content: center; text-decoration: none; transition: background 0.2s;
+    }
+    .matrix-circle-icon-btn:hover { background-color: #1a8cb6; }
+    .matrix-circle-icon-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+    .matrix-rect-action-btn {
+      width: 140px; padding: 8px 0; background-color: #ffffff; border: 1px solid #dadce0;
+      color: #3c4043; font-size: 13px; font-weight: 500; border-radius: 4px; cursor: pointer; transition: all 0.2s;
+    }
+    .matrix-rect-action-btn:hover { background-color: #f8fafc; border-color: #bdc1c6; color: #1a8cb6; }
+
+    .dashboard-header-panel {
+      display: grid; grid-template-columns: 1.2fr 2.5fr 2.5fr 1.8fr; gap: 20px;
+      align-items: center; background: #ffffff; padding: 15px 0; margin-bottom: 25px;
+    }
+    .db-col-logo { display: flex; justify-content: center; align-items: center; }
+    .db-logo { max-width: 100%; max-height: 100px; object-fit: contain; }
+    .db-col-details .db-institution-title { margin: 0 0 8px 0; font-size: 1.3rem; color: #2c3e50; }
+    .db-title-link { color: #2980b9; text-decoration: none; }
+    .db-title-link:hover { text-decoration: underline; }
+    .db-address-text { margin: 0; font-size: 0.9rem; color: #555; line-height: 1.4; }
+    
+    .db-col-map iframe { width: 100%; height: 100px; border: 1px solid #e0e0e0; border-radius: 4px; }
+    .db-col-contact { font-size: 0.85rem; color: #333; border-left: 1px solid #eeeeee; padding-left: 15px; }
+    .contact-block strong { display: block; color: #666; font-size: 0.8rem; }
+    .db-social-row { margin-top: 12px; display: flex; gap: 10px; }
+    .db-icon-link { text-decoration: none; font-size: 1.1rem; opacity: 0.7; transition: opacity 0.2s; }
+    .db-icon-link:hover { opacity: 1; }
+    .dashboard-section-heading { font-size: 1.4rem; font-weight: bold; letter-spacing: 0.5px; color: #111; margin: 30px 0 15px 0; text-transform: uppercase; }
+
+    .portal-back-btn {
+      display: inline-flex; align-items: center; gap: 8px; background: #f1f3f4; border: 1px solid #cbd5e1;
+      padding: 8px 16px; border-radius: 6px; color: #3c4043; font-weight: 500; font-size: 13px; cursor: pointer;
+      margin-bottom: 20px; transition: background 0.2s;
+    }
+    .portal-back-btn:hover { background: #e8eaed; border-color: #94a3b8; }
+    
+    .portal-container {
+      background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 30px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); margin-top: 15px;
+    }
+
+    /* Core Info Profile Header System */
+    .info-profile-header {
+      display: flex; gap: 25px; background: #f8fafc; border: 1px solid #e2e8f0;
+      border-radius: 6px; padding: 25px; margin-bottom: 35px; align-items: center;
+    }
+    .info-logo-container {
+      background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px;
+      display: flex; align-items: center; justify-content: center; width: 120px; height: 120px; flex-shrink: 0;
+    }
+    .info-logo-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .info-details-container h2 { margin: 0 0 12px 0; color: #0d3a58; font-size: 1.5rem; font-weight: 700; }
+    .info-meta-item { font-size: 0.95rem; color: #475569; margin-bottom: 6px; line-height: 1.4; }
+    .info-link { color: #0284c7; text-decoration: none; font-weight: 500; }
+    .info-link:hover { text-decoration: underline; }
+
+/* ==========================================
+   SLIDES & DOCUMENT VIEWER STYLES
+   ========================================== */
+
+.slides-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid #dadce0;
+  border-radius: 6px;
+  margin-top: 20px;
+  
+  /* Background warna slate dengan animated SVG loading spinner */
+  background: #f8fafc url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38" stroke="%231a8cb6"><g fill="none" fill-rule="evenodd"><g transform="translate(1 1)" stroke-width="2"><circle stroke-opacity=".3" cx="18" cy="18" r="18"/><path d="M36 18c0-9.94-8.06-18-18-18"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="0.8s" repeatCount="indefinite"/></path></g></g></svg>') center no-repeat;
+}
+
+.slides-wrapper iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.landscape-view { 
+  aspect-ratio: 16 / 9; 
+  max-height: 75vh; 
+  margin: 0 auto; 
+}
+
+.portrait-view { 
+  aspect-ratio: 4 / 5; 
+  max-width: 650px; 
+  margin: 20px auto 0; 
+}
+
+.pdf-fix {
+  aspect-ratio: auto;
+  height: 600px;
+}
+
+.pdf-fix iframe { 
+  height: 100%; 
+}
+
+    .filter-iframe-canvas { 
+      width: 100%; 
+      min-height: 70vh; 
+      border: 1px solid #dadce0; 
+      border-radius: 6px; 
+      margin-top: 15px; 
+      }
+
+    .req-section-title {
+      font-size: 1.1rem; font-weight: 700; text-transform: uppercase; color: #0f172a;
+      margin: 35px 0 20px 0; padding-bottom: 8px; border-bottom: 2px solid #0284c7;
+    }
+    .subject-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .subject-column { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 20px; }
+    .subject-column h4 { margin: 0 0 15px 0; font-size: 1.05rem; font-weight: 700; text-transform: uppercase; }
+    
+    .sub-stem h4 { color: #0284c7; }
+    .sub-humanities h4 { color: #7c3aed; }
+    .sub-social h4 { color: #16a34a; }
+    
+    .subject-column ul { list-style-type: square; padding-left: 20px; }
+    .subject-column ul li { color: #475569; font-size: 0.92rem; margin-bottom: 8px; line-height: 1.4; }
+
+    .req-container { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 20px 25px; }
+    .req-list { list-style-type: disc; padding-left: 20px; }
+    .req-list li { color: #334155; font-size: 0.95rem; margin-bottom: 12px; line-height: 1.5; }
+    .req-list li:last-child { margin-bottom: 0; }
+
+    .contact-card-box { max-width: 600px; background: #f8fafc; border: 1px solid #dadce0; padding: 30px; border-radius: 6px; }
+    .contact-card-box label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #202124; }
+    .contact-card-box input, .contact-card-box textarea, .contact-card-box select {
+      width: 100%; padding: 10px; margin-bottom: 16px; border: 1px solid #dadce0; border-radius: 4px; font-size: 13.5px;
+    }
+    .contact-card-box button { padding: 10px 24px; background-color: #1a8cb6; color: white; border: none; border-radius: 4px; font-weight: 500; cursor: pointer; }
+    .contact-card-box button:hover { background-color: #147298; }
+
+    @media (max-width: 992px) {
+      .institution-card-matrix { grid-template-columns: repeat(2, 1fr); }
+      .dashboard-header-panel { grid-template-columns: 1fr; gap: 15px; text-align: center; }
+      .db-col-contact { border-left: none; padding-left: 0; border-top: 1px solid #eee; padding-top: 15px; }
+      .db-social-row { justify-content: center; }
+    }
+    @media (max-width: 768px) {
+      .site-header { flex-direction: column; gap: 15px; padding: 15px; }
+      .nav-menu-list { flex-wrap: wrap; justify-content: center; }
+      .institution-card-matrix { grid-template-columns: 1fr; }
+      .dynamic-hero-banner { padding: 20px 15px; }
+      .hero-title-top { font-size: 22px; }
+      .hero-title-main { font-size: 24px; }
+      .hero-title-sub { font-size: 18px; }
+      .hero-accent-line { width: 200px; }
+      .info-profile-header { flex-direction: column; text-align: center; align-items: center; padding: 20px; }
+      .info-logo-container { margin-bottom: 10px; }
+      .subject-grid { grid-template-columns: 1fr; }
+    }
+
+/* ==========================================
+     ADMISSION GRID & CARDS STYLES
+     ========================================== */
+
+  /* Base 2x2 Grid Layout (Desktop) */
+  .admission-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 lajur untuk 4 kad */
+    gap: 20px;
+  }
+
+  /* Base Card Styling */
+  .admission-card {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    gap: 20px;
+  }
+
+  /* Left Column (Logo & Button) */
+  .admission-col-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    width: 140px;
+  }
+
+  .logo-box {
+    width: 130px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+    padding: 5px;
+  }
+
+  .logo-box.logo-black {
+    background: #000000;
+    border-color: #000000;
+  }
+
+  .hecas-logo-circle {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    width: 65px;
+    height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-click-here {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    padding: 8px 10px;
+    background: #ffffff;
+    color: #1a1a1a;
+    border: 1.5px solid #222222;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+
+  .btn-click-here:hover {
+    background: #222222;
+    color: #ffffff;
+  }
+
+  /* Right Column (Info & Social Icons) */
+  .admission-col-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+  }
+
+  .admission-col-right h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.05rem;
+    color: #111827;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .contact-info {
+    margin: 3px 0;
+    font-size: 0.88rem;
+    color: #4b5563;
+    line-height: 1.4;
+  }
+
+  .icon-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .circle-icon {
+    width: 32px;
+    height: 32px;
+    background: #555555;
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: background 0.2s ease;
+  }
+
+  .circle-icon:hover {
+    background: #111111;
+  }
+
+  /* Responsive Adjustments (Mobile) */
+  @media (max-width: 768px) {
+    .admission-grid {
+      grid-template-columns: 1fr; /* Bertukar ke 1 lajur sahaja di skrin telefon */
+    }
+  }
+  </style>
+</head>
+<body>
+
+<div id="login-container">
+  <form class="login-box" onsubmit="event.preventDefault(); executeLogin();">
+    <h2>CEU System Login</h2>
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button type="submit">Sign In</button>
+    <div id="login-error"></div>
+  </form>
+</div>
+
+  <div id="main-app">
+    
+<div class="update-footer" style="text-align: center; padding: 10px 0; font-size: 0.85rem; color: #7f8c8d;">
+  <span id="system-update-date">Syncing portal version...</span>
+</div>
+
+    <header class="site-header">
+      <a onclick="showPage('home')" class="brand-block">
+       <img class="brand-logo" src="https://drive.google.com/uc?export=view&id=1o2Mj9yg4pUG70cMILjYi0cdsldTJhNiv" alt="CEU Logo" onerror="this.src='https://via.placeholder.com/32?text=CEU'">
+        <span class="brand-title">Career Education Unit</span>
+      </a>
+
+<nav>
+  <ul class="nav-menu-list">
+    <li class="nav-item">
+      <a class="nav-link active" id="link-home" onclick="showPage('home')">Home</a>
+    </li>
+
+    <!-- Corrected: Wrapped in <li> and styled as a nav-link -->
+    <li class="nav-item">
+      <a class="nav-link" id="link-pathway" onclick="showPage('page-pathway')">Pathways</a>
+    </li>
+      
+    <li class="nav-item">
+      <a class="nav-link" id="link-institutions">Education Pathways ▾</a>
+      <div class="dropdown-container">
+        <a onclick="showPage('inst-sixth-form', this)">Sixth Form Centres ✅</a>
+        <a onclick="showPage('inst-universities', this)">Local Universities ✅</a>
+        <a onclick="showPage('inst-technical', this)">Technical, Vocational & Skills Training Institutes ✅</a>
+        <a onclick="showPage('inst-filter', this)">Technical Institutions Filtering</a>
+        <a onclick="showPage('inst-private', this)">Private Institutions ✅</a>
+        <a onclick="showPage('inst-training', this)">Education Provider ✅</a>
+      </div>
+    </li>
+          
+          <!-- SCHOLARSHIPS DROPDOWN -->
+          <li class="nav-item">
+            <a class="nav-link" id="link-scholarships">Scholarships ▾</a>
+            <div class="dropdown-container">
+              <a onclick="showPage('sub-menu-gov', this)">Government Scholarship ✅</a>
+              <a onclick="showPage('sub-menu-foreign', this)">Scholarships Abroad ✅</a>
+            </div>
+          </li>
+
+          <!-- UNIFORMED GROUPS DROPDOWN -->
+          <li class="nav-item">
+            <a class="nav-link" id="link-uniformed">Uniformed Groups ▾</a>
+            <div class="dropdown-container">
+              <a onclick="showPage('page-rbaf', this)">Royal Brunei Armed Forces ✅</a>
+              <a onclick="showPage('page-rbpf', this)">Royal Brunei Police Force ✅</a>
+              <a onclick="showPage('page-bomba', this)">Fire and Rescue Department ✅</a>
+              <a onclick="showPage('page-penjara', this)">Prisons Department ✅</a>
+            </div>
+          </li>
+
+          <!-- GOVERNMENT SECTOR DROPDOWN -->
+          <li class="nav-item">
+            <a class="nav-link" id="link-gov-employment">Government Sector ▾</a>
+            <div class="dropdown-container">
+              <a onclick="showPage('page-moh', this)">Ministry of Health ✅</a>
+              <a onclick="showPage('page-met', this)">Meteorological Department ✅</a>
+              <a onclick="showPage('page-rtb', this)">Radio Televisyen Brunei ✅</a>
+              <a onclick="showPage('page-tourism', this)">Tourism Development Department ✅</a>
+              <a onclick="showPage('page-rba', this)">Royal Brunei Airlines ✅</a>
+              <a onclick="showPage('page-bdnac', this)">Brunei Darussalam National Accreditation Council, MOE ✅</a>
+              <a onclick="showPage('page-hed', this)">Department of Higher Education, MOE ✅</a>
+              <a onclick="showPage('page-jpp', this)">Department of Educators Management, MOE ✅</a>
+            </div>
+          </li>
+
+<!-- PRIVATE SECTOR DROPDOWN -->
+          <li class="nav-item">
+            <a class="nav-link" id="link-corporate">Private Sectors ▾</a>
+            <div class="dropdown-container">
+              <a onclick="showPage('page-corp-dst', this)">Datastream Digital (DST)</a>
+              <a onclick="showPage('page-corp-hibiscus', this)">Hibiscus EP (Brunei) B.V. ✅</a>
+              <a onclick="showPage('page-corp-aegis', this)">AEGIS Secure Solutions ✅</a>
+            </div>
+          </li>
+
+<li class="nav-item" id="link-admission">
+  <a class="nav-link" onclick="showPage('admission')">Admission System</a>
+</li>
+
+          <li class="nav-item" id="link-contact">
+            <a class="nav-link" onclick="showPage('contact')">Contact Us</a>
+          </li>
+
+          <li class="nav-item" id="link-logout">
+            <a class="nav-link logout-nav-btn" onclick="handleLogout()">Log Out</a>
+          </li>
+
+        </ul>
+      </nav>
+    </header>
+
+    <div class="dynamic-hero-banner" id="portal-hero-banner">
+      <div class="hero-inner-content" id="hero-text-inject-block">
+        <!-- Baseline Initialized Home Text Strings -->
+        <div class="hero-title-top">WELCOME TO</div>
+        <div class="hero-accent-line"></div>
+        <div class="hero-title-main">CAREER EDUCATION UNIT</div>
+        <div class="hero-title-sub">DEPARTMENT OF SCHOOLS</div>
+      </div>
+    </div>
+
+    <main>
+
+      <div id="page-home" class="page-content active">
+        <div class="home-section-strip">
+          <div class="home-section-heading">Roles</div>
+          <div class="home-section-body">The career education unit collaborates with school career teachers to provide exposure to enhance students knowledge about career paths, enabling them to make informed choices regarding subjects or courses to pursue at the school level.</div>
+        </div>
+        <div class="home-section-strip alt-bg">
+          <div class="home-section-heading">Peranan</div>
+          <div class="home-section-body">Unit Pendidikan Kerjaya bekerjasama dengan guru-guru kerjaya sekolah bagi memberikan pendedahan bagi meningkatkan pengetahuan pelajar mengenai hala tuju kerjaya untuk pelajar-pelajar membuat pilihan yang tepat berhubung dengan mata pelajaran atau kursus yang akan diikuti di peringkat persekolahan.</div>
+        </div>
+        <div class="home-section-strip">
+          <div class="home-section-heading">Mission</div>
+          <div class="home-section-body">providing holistic career guidance and consultation services to shape educated, visionary, and competitive students.</div>
+        </div>
+        <div class="home-section-strip alt-bg">
+          <div class="home-section-heading">Misi</div>
+          <div class="home-section-body">Menyediakan perkhidmatan bimbingan dan konsultasi kerjaya yang holistik ke arah pembentukan pelajar yang berpendidikan, berwawasan dan berdaya saing.</div>
+        </div>
+        <div class="home-section-strip">
+          <div class="home-section-heading">Vision</div>
+          <div class="home-section-body">Towards excellence and achieving student goals so they are more focused.</div>
+        </div>
+        <div class="home-section-strip alt-bg">
+          <div class="home-section-heading">Visi</div>
+          <div class="home-section-body">Ke arah kecemerlangan dan pencapaian hala tuju pelajar agar lebih terarah.</div>
+        </div>
+      </div>
+
+<!-- PATHWAY DETAIL VIEW -->
+<div id="page-page-pathway" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-qtm44j9dYkI-JI7xAfhfEXD9lr7wv0VQuw&s" 
+             onerror="this.src='https://via.placeholder.com/80?text=Pathway';" 
+             alt="Pathway Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Education & Career Pathways for BTEC</h2>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+      <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1N_x0T9ADuYJO0p40m4JOog7L-09-bzBA/preview?rm=minimal" 
+              title="Pathway Presentation" 
+              loading="lazy" 
+              allowfullscreen 
+              style="width: 100%; height: 100%; border: none;">
+      </iframe>
+    </div>
+  </div>
+</div>
+
+<div id="page-inst-sixth-form" class="page-content">
+  <div class="view-container-title">SIXTH FORM CENTRES</div>
+  <p style="color: #5f6368; margin-bottom: 25px;">Explore pre-university entry criteria and subject choices across local sixth form colleges in Brunei Darussalam:</p>
+  
+  <div class="institution-card-matrix">
+    
+    <!-- Maktab Duli -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://media.licdn.com/dms/image/v2/C4D0BAQHWnNKrOpfszw/company-logo_200_200/company-logo_200_200/0/1630574339668/maktabduli_logo?e=2147483647&v=beta&t=Etw021UN5BiYerrelcy54BkJYHA6gYe8GNvrvBQ0r_w" 
+             onerror="this.src='https://via.placeholder.com/80?text=MD';" 
+             alt="Maktab Duli Logo">
+        <div class="matrix-item-meta-text">
+          Simpang 373-17,<br>Jalan Pasar Gadong, BSB<br>Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2424564
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Maktab Duli Pengiran Muda Al-Muhtadee Billah</div>
+      <div class="matrix-action-icons-row">
+        <a href="https://www.instagram.com/maktabduli_news/?hl=en" target="_blank" rel="noopener noreferrer" class="matrix-circle-icon-btn" title="Instagram Profile">
+          <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6m4.4 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9m0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5m4.75-.75a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5z"/></svg>
+        </a>
+      </div>
+      <a href="https://www.instagram.com/maktabduli_news/?hl=en" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+        <button class="matrix-rect-action-btn">Click Here</button>
+      </a>
+    </div>
+
+    <!-- PTE Meragang -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://upload.wikimedia.org/wikipedia/en/b/bd/Meragang_Sixth_Form_Centre_logo.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=PTEM';" 
+             alt="PTE Meragang Logo">
+        <div class="matrix-item-meta-text">
+          Muara-Tutong Highway,<br>Kampong Meragang<br>Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2771120
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Pusat Tingkatan Enam Meragang</div>
+      <div class="matrix-action-icons-row">
+        <a href="https://www.instagram.com/pte.meragang" target="_blank" rel="noopener noreferrer" class="matrix-circle-icon-btn" title="Instagram Profile">
+          <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6m4.4 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9m0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5m4.75-.75a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5z"/></svg>
+        </a>
+      </div>
+      <a href="https://www.instagram.com/pte.meragang" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+        <button class="matrix-rect-action-btn">Click Here</button>
+      </a>
+    </div>
+
+    <!-- Maktab Sains -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRHCdAtH416lg_Q1fMsz5wctsdLb1jBWgxSQ&s" 
+             onerror="this.src='https://via.placeholder.com/80?text=MSPSBS';" 
+             alt="Maktab Sains Logo">
+        <div class="matrix-item-meta-text">
+          Simpang 125, Jalan Muara,<br>Bandar Seri Begawan,<br>BB4713, Brunei<br><br>
+          <strong>Tel:</strong> +673 2340694
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Maktab Sains Paduka Seri Begawan Sultan</div>
+      <div class="matrix-action-icons-row">
+        <a href="https://www.instagram.com/mspsbs.official/?hl=en" target="_blank" rel="noopener noreferrer" class="matrix-circle-icon-btn" title="Instagram Profile">
+          <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6m4.4 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9m0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5m4.75-.75a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5z"/></svg>
+        </a>
+      </div>
+      <a href="https://www.instagram.com/mspsbs.official/?hl=en" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+        <button class="matrix-rect-action-btn">Click Here</button>
+      </a>
+    </div>
+
+    <!-- PTE Sengkurong -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://upload.wikimedia.org/wikipedia/en/7/73/Sengkurong_Sixth_Form_Centre.jpeg" 
+             onerror="this.src='https://via.placeholder.com/80?text=PTES';" 
+             alt="PTE Sengkurong Logo">
+        <div class="matrix-item-meta-text">
+          Jalan Mulaut - Limau Manis,<br>Kampong Mulaut, BG2121<br>Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2671660
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Pusat Tingkatan Enam Sengkurong</div>
+      <div class="matrix-action-icons-row">
+        <a href="https://www.instagram.com/pte_sengkurong/?hl=en" target="_blank" rel="noopener noreferrer" class="matrix-circle-icon-btn" title="Instagram Profile">
+          <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6m4.4 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9m0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5m4.75-.75a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5z"/></svg>
+        </a>
+      </div>
+      <a href="https://www.instagram.com/pte_sengkurong/?hl=en" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+        <button class="matrix-rect-action-btn">Click Here</button>
+      </a>
+    </div>
+
+    <!-- PTE Tutong -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://upload.wikimedia.org/wikipedia/en/e/e6/Tutong_Sixth_Form_Centre_logo.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=PTET';" 
+             alt="PTE Tutong Logo">
+        <div class="matrix-item-meta-text">
+          Kg Perpindahan Bukit Beruang,<br>Tutong, TC3345<br>Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 4247490
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Pusat Tingkatan Enam Tutong</div>
+      <div class="matrix-action-icons-row">
+        <a href="https://www.instagram.com/pte.tutong/?hl=en" target="_blank" rel="noopener noreferrer" class="matrix-circle-icon-btn" title="Instagram Profile">
+          <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6m4.4 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9m0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5m4.75-.75a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5z"/></svg>
+        </a>
+      </div>
+      <a href="https://www.instagram.com/pte.tutong/?hl=en" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+        <button class="matrix-rect-action-btn">Click Here</button>
+      </a>
+    </div>
+
+    <!-- PTE Belait -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://upload.wikimedia.org/wikipedia/en/2/2d/Pusat_Tingkatan_Enam_Belait.jpg" 
+             onerror="this.src='https://via.placeholder.com/80?text=PTEB';" 
+             alt="PTE Belait Logo">
+        <div class="matrix-item-meta-text">
+          Jalan Mumong, Kuala Belait,<br>Brunei Darussalam<br><br><br>
+          <strong>Tel:</strong> +673 3341182
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Pusat Tingkatan Enam Belait</div>
+      <div class="matrix-action-icons-row">
+        <a href="https://www.instagram.com/pteb.kb/?hl=en" target="_blank" rel="noopener noreferrer" class="matrix-circle-icon-btn" title="Instagram Profile">
+          <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6m4.4 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9m0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5m4.75-.75a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5z"/></svg>
+        </a>
+      </div>
+      <a href="https://www.instagram.com/pteb.kb/?hl=en" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+        <button class="matrix-rect-action-btn">Click Here</button>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- General Admission Rules -->
+  <div class="home-section-strip" style="text-align: left; padding: 30px 0 10px 0;">
+    <div class="home-section-heading" style="border-bottom: 2px solid #1a8cb6; padding-bottom: 6px;">General Admission Rules</div>
+  </div>
+  <div class="req-container">
+    <ul class="req-list">
+      <li><strong>Bahasa Melayu:</strong> Minimum Grade <strong>C6</strong> in BGCE ‘O’ Level Bahasa Melayu / Pengetahuan Agama Islam / Kesusasteraan Melayu.</li>
+      <li><strong>English Language:</strong> <strong>PASS</strong> GCE ‘O’ Level English Language / IGCSE English (as a second language).</li>
+      <li><strong>Credits Criteria:</strong> Minimum <strong>4 credits</strong> (excluding Malay Language) in GCE ‘O’ Level subjects OR Grade C in IGCSE subjects.</li>
+    </ul>
+  </div>
+
+  <!-- Subject Streams -->
+  <div class="home-section-strip" style="text-align: left; padding: 20px 0 10px 0;">
+    <div class="home-section-heading" style="border-bottom: 2px solid #1a8cb6; padding-bottom: 6px;">A-Level Subject Streams Offered</div>
+  </div>
+  <div class="subject-grid">
+    <div class="subject-column sub-stem">
+      <h4>STEM Fields</h4>
+      <ul>
+        <li>Mathematics</li>
+        <li>Chemistry</li>
+        <li>Physics</li>
+        <li>Biology</li>
+        <li>Information Technology</li>
+      </ul>
+    </div>
+    <div class="subject-column sub-humanities">
+      <h4>Humanities</h4>
+      <ul>
+        <li>Art and Design</li>
+        <li>Bahasa Melayu</li>
+        <li>History</li>
+        <li>Usuluddin</li>
+        <li>Syariah</li>
+      </ul>
+    </div>
+    <div class="subject-column sub-social">
+      <h4>Social Sciences</h4>
+      <ul>
+        <li>Accounting</li>
+        <li>Business</li>
+        <li>Economics</li>
+        <li>Geography</li>
+        <li>Psychology</li>
+        <li>Sociology</li>
+        <li>Travel and Tourism</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div id="page-inst-universities" class="page-content">
+  <div class="view-container-title">UNIVERSITIES</div>
+  <p style="color: #5f6368; margin-bottom: 25px;">Explore and access higher education programs across public universities in Brunei Darussalam:</p>
+  
+  <div class="institution-card-matrix">
+    
+    <!-- UNIVERSITI BRUNEI DARUSSALAM -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://upload.wikimedia.org/wikipedia/en/thumb/a/af/Universiti_Brunei_Darussalam_logo.svg/960px-Universiti_Brunei_Darussalam_logo.svg.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=UBD';" 
+             alt="UBD Logo">
+        <div class="matrix-item-meta-text">
+          Jalan Tungku Link, BE1410<br>Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2463001
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Universiti Brunei Darussalam ✅</div>
+      <div class="matrix-action-icons-row">
+        <a href="mailto:office.admission@ubd.edu.bn" class="matrix-circle-icon-btn" title="Email Admission">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+        <a href="https://www.ubd.edu.bn" target="_blank" rel="noopener noreferrer" class="matrix-circle-icon-btn" title="Visit Website">
+          <svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0-5-2.24-5-5s2.24-5-5-5z"/></svg>
+        </a>
+      </div>
+      <button class="matrix-rect-action-btn" onclick="showPage('ubd-detail')">Click Here</button>
+    </div>
+
+    <!-- UNIVERSITI TEKNOLOGI BRUNEI -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKZYbr_BBpDHb__1jEdsXOWU65Jh8bysXZNQ&s" 
+             onerror="this.src='https://via.placeholder.com/80?text=UTB';" 
+             alt="UTB Logo">
+        <div class="matrix-item-meta-text">
+          Jalan Tungku Link, Gadong,<br>BE1410 Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2461020/1/2/3
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Universiti Teknologi Brunei ✅</div>
+      <div class="matrix-action-icons-row">
+        <a href="mailto:enquiry@utb.edu.bn" class="matrix-circle-icon-btn" title="Email Enquiry">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+        <a href="https://www.utb.edu.bn" target="_blank" rel="noopener noreferrer" class="matrix-circle-icon-btn" title="Visit Website">
+          <svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0-5-2.24-5-5s2.24-5-5-5z"/></svg>
+        </a>
+      </div>
+      <button class="matrix-rect-action-btn" onclick="showPage('utb-detail')">Click Here</button>
+    </div>
+
+    <!-- UNIVERSITI ISLAM SULTAN SHARIF ALI -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://upload.wikimedia.org/wikipedia/en/2/24/Crest_of_Sultan_Sharif_Ali_Islamic_University.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=UNISSA';" 
+             alt="UNISSA Logo">
+        <div class="matrix-item-meta-text">
+          Simpang 347, Jalan Pasar Gadong,<br>Bandar Seri Begawan, BE1310<br><br>
+          <strong>Tel:</strong> +673 2462000
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Universiti Islam Sultan Sharif Ali ✅</div>
+      <div class="matrix-action-icons-row">
+        <a href="mailto:info@unissa.edu.bn" class="matrix-circle-icon-btn" title="Email Info">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+        <a href="https://www.unissa.edu.bn" target="_blank" rel="noopener noreferrer" class="matrix-circle-icon-btn" title="Visit Website">
+          <svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0-5-2.24-5-5s2.24-5-5-5z"/></svg>
+        </a>
+      </div>
+      <button class="matrix-rect-action-btn" onclick="showPage('unissa-detail')">Click Here</button>
+    </div>
+
+    <!-- KOLEJ UNIVERSITI PERGURUAN UGAMA SERI BEGAWAN -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://www.kupu-sb.edu.bn/wp-content/uploads/2025/08/kupusbLogo-scaled.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=KUPU+SB';" 
+             alt="KUPU SB Logo">
+        <div class="matrix-item-meta-text">
+          Jalan Raja Isteri P.A.S.,<br>Bandar Seri Begawan, BA2111<br><br>
+          <strong>Tel:</strong> +673 2201021
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Kolej Universiti Perguruan Ugama Seri Begawan</div>
+      <div class="matrix-action-icons-row">
+        <a href="mailto:info@kupusb.edu.bn" class="matrix-circle-icon-btn" title="Email Info">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+        <a href="https://www.kupusb.edu.bn" target="_blank" rel="noopener noreferrer" class="matrix-circle-icon-btn" title="Visit Website">
+          <svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0-5-2.24-5-5s2.24-5-5-5z"/></svg>
+        </a>
+      </div>
+      <button class="matrix-rect-action-btn" onclick="showPage('kupusb-detail')">Click Here</button>
+    </div>
+
+  </div>
+</div>
+
+<div id="page-inst-technical" class="page-content">
+  <div class="view-container-title">TECHNICAL, VOCATIONAL & SKILL TRAINING INSTITUTIONS</div>
+  <p style="color: #5f6368; margin-bottom: 25px; font-size: 1rem; line-height: 1.5;">
+    Explore technical diploma matrices, vocational skill pathways, youth empowerment programs, traditional heritage craftsmanship, and lifelong learning centers across Brunei Darussalam:
+  </p>
+  
+  <div class="institution-card-matrix">
+
+    <!-- 1. IBTE -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://upload.wikimedia.org/wikipedia/en/c/c9/Institute_of_Brunei_Technical_Education_logo.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=IBTE';" 
+             alt="IBTE Logo">
+        <div class="matrix-item-meta-text">
+          Simpang 347, Jalan Pasar Baharu,<br>Gadong, BE1310,<br>Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2425555
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Institut Pendidikan Teknikal Brunei (IBTE)</div>
+      <div class="matrix-action-icons-row">
+        <a href="mailto:info@ibte.edu.bn" class="matrix-circle-icon-btn" title="Email Enquiry" aria-label="Email IBTE">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+      </div>
+      <button class="matrix-rect-action-btn" onclick="showPage('ibte-detail')">Click Here</button>
+    </div>
+
+    <!-- 2. POLITEKNIK BRUNEI -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://upload.wikimedia.org/wikipedia/en/9/9f/Brunei_Polytechnic.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=PB';" 
+             alt="Politeknik Brunei Logo">
+        <div class="matrix-item-meta-text">
+          Block 2E Ong Sum Ping Condo,<br>Jalan Ong Sum Ping, BSB,<br>BA1311, Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2234630 / 2234650
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Politeknik Brunei (PB) ✅</div>
+      <div class="matrix-action-icons-row">
+        <a href="mailto:contact@pb.edu.bn" class="matrix-circle-icon-btn" title="Email Support" aria-label="Email Politeknik Brunei">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+      </div>
+      <button class="matrix-rect-action-btn" onclick="showPage('pb-detail')">Click Here</button>
+    </div>
+
+    <!-- 3. PUSAT PEMBANGUNAN BELIA (PPB) -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://static.wixstatic.com/media/179b4c_686061c512f944e38c1b93541f24a58b~mv2.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=PPB';" 
+             alt="PPB Crest">
+        <div class="matrix-item-meta-text">
+          Lebuhraya Muara - Tutong,<br>Kg. Lambak Kanan, BC2515,<br>Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2393681 / 2393682
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Pusat Pembangunan Belia (PPB) ✅</div>
+      <div class="matrix-action-icons-row">
+        <a href="mailto:ppb@kkbs.gov.bn" class="matrix-circle-icon-btn" title="Email PPB" aria-label="Email Pusat Pembangunan Belia">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+      </div>
+      <button class="matrix-rect-action-btn" onclick="showPage('ppb-detail')">Click Here</button>
+    </div>
+
+    <!-- 4. PUSAT LATIHAN KESENIAN DAN PERTUKANGAN TANGAN BRUNEI -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOQEDgowpM8m455gR5JMrkLXXkxFfUMVFF-Q&s" 
+             onerror="this.src='https://via.placeholder.com/80?text=PLKPTB';" 
+             alt="Pusat Kesenian Crest">
+        <div class="matrix-item-meta-text">
+          Jalan Resettlement,<br>Bandar Seri Begawan, BS8111,<br>Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2240191 / 2240192
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Pusat Latihan Kesenian & Pertukangan Tangan Brunei</div>
+      <div class="matrix-action-icons-row">
+        <a href="mailto:info@kkbs.gov.bn" class="matrix-circle-icon-btn" title="Email Centre" aria-label="Email Pusat Latihan Kesenian">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+      </div>
+      <button class="matrix-rect-action-btn" onclick="showPage('kesenian-detail')">Click Here</button>
+    </div>
+
+    <!-- 5. LIFELONG LEARNING CENTRE (L3C) -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://ihs.ubd.edu.bn/wp-content/uploads/2024/03/L3C-logo-colour-1024x231-1.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=L3C';" 
+             alt="L3C Emblem">
+        <div class="matrix-item-meta-text">
+          Jalan 10 Selatan, RPN Lambak Kanan,<br>BC2315, Berakas B,<br>Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2346201
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Pusat Pembelajaran Sepanjang Hayat (L3C)</div>
+      <div class="matrix-action-icons-row">
+        <a href="mailto:enquiry.l3c@moe.gov.bn" class="matrix-circle-icon-btn" title="Email L3C" aria-label="Email L3C">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+      </div>
+      <button class="matrix-rect-action-btn" onclick="showPage('l3c-detail')">Click Here</button>
+    </div>
+
+  </div>
+</div>
+
+<div id="page-inst-filter" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+  <div class="view-container-title">INSTITUTION FILTER HUB</div>
+  <p style="color: #5f6368; margin-bottom: 25px;">Use the live interactive database matrix below to sort, filter, and extract entry-level parameters matching specific localized parameters.</p>
+  
+  <div class="filter-frame-container">
+    <iframe src="https://script.google.com/macros/s/AKfycbzI2feJLMzat22iDM0uZr4kHY8LG77TfikdMGvB4Fl9NMhszqCxgZIBug6e6vkEs6TeIg/exec" 
+            title="Institution Filter Database" 
+            loading="lazy" 
+            style="width: 100%; border: none; min-height: 600px;"></iframe>
+  </div>
+</div>
+
+<div id="page-inst-private" class="page-content">
+  <div class="view-container-title">PRIVATE INSTITUTIONS</div>
+  <p style="color: #5f6368; margin-bottom: 25px;">Explore structural profiles and pathways inside private higher education organizations:</p>
+  
+  <div class="institution-card-matrix">
+
+    <!-- LAKSAMANA COLLEGE OF BUSINESS -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLCFrfX2pR3C7ES4sFk-TaWveipsFZA8s2ooaolr5VePriwYTiCn3uZ6nN&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=LCB';" 
+             alt="LCB Logo">
+        <div class="matrix-item-meta-text">
+          Roof Top, Plaza Abdul Razak,<br>Jalan Kebangsaan, BSB,<br>BA1712, Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2238816 / +673 2238818
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Laksamana College of Business ✅</div>
+      <button class="matrix-rect-action-btn" onclick="showPage('lcb-detail')">Click Here</button>
+    </div>
+
+    <!-- KOLEJ INTERNATIONAL GRADUATE STUDIES -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1vw99-x9L4HU_RLOg49jCgVjHtxa4fD71IhCDcEdb526FSn6F2AbY12I&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=KIGS';" 
+             alt="KIGS Logo">
+        <div class="matrix-item-meta-text">
+          Blok Tengah Kompleks Setia Kenangan, Lot 22083<br>Kiulap, Mukim Gadong<br>BE1518, Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2238701
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Kolej International Graduate Studies ✅</div>
+      <button class="matrix-rect-action-btn" onclick="showPage('kigs-detail')">Click Here</button>
+    </div>
+
+    <!-- COSMOPOLITAN COLLEGE OF COMMERCE AND TECHNOLOGY -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTB0e_qWyn9MttYOrZim6FXaLMHIoHgXs1YzGOTP5nxg&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=CCCT';" 
+             alt="CCCT Logo">
+        <div class="matrix-item-meta-text">
+          Jaya Setia Square, Simpang 13,<br>Kampong Jaya Setia, Jalan Berakas,<br>BB2713, Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2651244 / WA: +673 8721244
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Cosmopolitan College of Commerce and Technology</div>
+      <button class="matrix-rect-action-btn" onclick="showPage('ccct-detail')">Click Here</button>
+    </div>
+
+    <!-- JPMC COLLEGE OF HEALTH SCIENCES -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTn6_bBSWenTQv46BU96tKIAYmdbSZChRK_EuGGYiBcSg&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=JPMC';" 
+             alt="JPMC Logo">
+        <div class="matrix-item-meta-text">
+          Block 2C, East Wing,<br>Jalan Ong Sum Ping, BSB,<br>BA1311, Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2233700
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">JPMC College of Health Sciences ✅</div>
+      <button class="matrix-rect-action-btn" onclick="showPage('jpmc-detail')">Click Here</button>
+    </div>
+
+    <!-- MICRONET INTERNATIONAL COLLEGE -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKdzel0ucRCtfyNYZuuDpdDRh4uFDQded5GXAuYfhmgA&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=Micronet';" 
+             alt="Micronet Logo">
+        <div class="matrix-item-meta-text">
+          No.11 & 12, Kompleks Hj Tahir 2,<br>Sg. Gadong Menglait, BSB,<br>BE4119, Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2451133
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Micronet International College ✅</div>
+      <button class="matrix-rect-action-btn" onclick="showPage('micronet-detail')">Click Here</button>
+    </div>
+
+    <!-- KEMUDA INSTITUTE -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://upload.wikimedia.org/wikipedia/en/b/ba/Kemuda-logo.gif" 
+             onerror="this.src='https://via.placeholder.com/80?text=Kemuda';" 
+             alt="Kemuda Logo">
+        <div class="matrix-item-meta-text">
+          Unit 25, Ground Floor, Spg 633,<br>Jln Beribi, Mukim Gadong,<br>BE1118, Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2448679
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Kemuda Institute ✅</div>
+      <button class="matrix-rect-action-btn" onclick="showPage('kemuda-detail')">Click Here</button>
+    </div>
+
+    <!-- HADTECH COLLEGE -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://hadtech.edu.bn/wp-content/uploads/elementor/thumbs/Hadtech_College_Logo-1-3-r34m9d2ef2ah84xw0qegpiyv6jh9a2vrtbp55ayhjk.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=HADtech';" 
+             alt="HADtech Logo">
+        <div class="matrix-item-meta-text">
+          Simpang 175, Jalan Telanai,<br>Bandar Seri Begawan, BA2312,<br>Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2650566 / +673 7373900
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">HADtech College ✅</div>
+      <button class="matrix-rect-action-btn" onclick="showPage('hadtech-detail')">Click Here</button>
+    </div>
+
+    <!-- BICPA ACADEMY -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://bicpabrunei.com/wp-content/uploads/2022/08/favico-300x300.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=BICPA';" 
+             alt="BICPA Logo">
+        <div class="matrix-item-meta-text">
+          Unit 1-3, 1st Floor, Block A,<br>Regent Square, Simpang 150,<br>Kiulap, BE1518, Brunei<br><br>
+          <strong>Tel:</strong> +673 2233945
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">BICPA Academy ✅</div>
+      <button class="matrix-rect-action-btn" onclick="showPage('bicpa-detail')">Click Here</button>
+    </div>
+
+    <!-- UNIKLEARN (AN-NUR HARAPAN) -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://www.annurharapan.com/assets/an-nur/img/logo/Vector-Smart-Object.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=Uniklearn';" 
+             alt="Uniklearn Logo">
+        <div class="matrix-item-meta-text">
+          B17, Simpang 336-52,<br>Jalan Kebangsaan, BA1210,<br>Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 8123736
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Uniklearn (An-Nur Harapan) ✅</div>
+      <button class="matrix-rect-action-btn" onclick="showPage('uniklearn-detail')">Click Here</button>
+    </div>
+
+  </div>
+</div>
+
+<div id="page-inst-training" class="page-content">
+  <div class="view-container-title">EDUCATION PROVIDERS</div>
+  <p style="color: #5f6368; margin-bottom: 25px;">Explore education providers across Brunei Darussalam:</p>
+
+  <div class="institution-card-matrix">
+    
+    <!-- FINDLAY EDUCATION SERVICES -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://findlaybsb.com/wp-content/uploads/2022/05/New-Logo-1-267x300.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=Findlay';" 
+             alt="Findlay Logo">
+        <div class="matrix-item-meta-text">
+          E2, 1st Floor, Abdul Razak Complex,<br>Jalan Gadong, BE3519,<br>Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2428658
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Findlay Education Services ✅</div>
+      <div class="matrix-action-icons-row">
+        <a href="mailto:enquiry@findlaybsb.com" class="matrix-circle-icon-btn" title="Email Enquiry" aria-label="Email Findlay Education Services">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+      </div>
+      <button class="matrix-rect-action-btn" onclick="showPage('findlay-detail')">Click Here</button>
+    </div>
+
+    <!-- HRD SERVICES (HRDS) -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCr5v8sHdnABUJtWhYTvUZ3FFhTe-hYP2A4JqrQ_35sPDdizhzD1bz50E&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=HRDS';" 
+             alt="HRDS Logo">
+        <div class="matrix-item-meta-text">
+          SEAMEO VOCTECH Regional Centre,<br>Jalan Pasar Baharu, Gadong,<br>BE1318, Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2452245
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">HRD Services (HRDS) ✅</div>
+      <div class="matrix-action-icons-row">
+        <a href="mailto:hello@hrdseducation.com" class="matrix-circle-icon-btn" title="Email Enquiry" aria-label="Email HRD Services">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+      </div>
+      <button class="matrix-rect-action-btn" onclick="showPage('hrds-detail')">Click Here</button>
+    </div>
+
+  </div>
+</div>
+
+<div id="page-sub-menu-gov" class="page-content">
+  <div class="view-container-title">GOVERNMENT SCHOLARSHIPS</div>
+  <p style="color: #5f6368; margin-bottom: 25px;">Explore and access structural profiles, guidelines, and pathways across the local government scholarship systems:</p>
+  
+  <div class="institution-card-matrix">
+    
+    <!-- MINISTRY OF EDUCATION SCHOLARSHIP -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaPLu31gh2NfVv9Tz-0KHmCPxWJcZfTWpreCi7Lz0AIC78R1H_gnxDKVlL&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=MOE';" 
+             alt="MOE Logo">
+        <div class="matrix-item-meta-text">
+          5th Floor, Dept. of Scholarship Management,<br>Block C, Lapangan Terbang Lama, Berakas,<br>BSB, BB3510, Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2380019
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Ministry of Education Scholarship ✅</div>
+      <div class="matrix-action-icons-row">
+        <a href="mailto:scholarship@moe.gov.bn" class="matrix-circle-icon-btn" title="Email Enquiry" aria-label="Email Ministry of Education Scholarship Enquiry">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+      </div>
+      <button class="matrix-rect-action-btn" onclick="showPage('moe-gov-detail')">Click Here</button>
+    </div>
+
+    <!-- SULTAN'S SCHOLAR SCHEME -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSI9lepNidy6ojS40lrTzwWjxq9J1N5V4KHnmKhU4ayNASo6K8jfg9524s&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=Sultan%27s+Scholar';" 
+             alt="Sultan's Scholar Logo">
+        <div class="matrix-item-meta-text">
+          Bahagian Biasiswa "Sultan's Scholar",<br>Ibu Pejabat YSHHB, Jln Perdana Menteri,<br>BSB, BA1511, Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2234085 / +673 2234087
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Sultan's Scholar Scheme</div>
+      <button class="matrix-rect-action-btn" onclick="showPage('sultan-gov-detail')">Click Here</button>
+    </div>
+
+    <!-- SUPREME COMMANDER MINDEF SCHOLARSHIP -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://www.mindef.gov.bn/wp-content/uploads/2025/08/Mindef-Logo-Edited-Edited.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=MINDEF';" 
+             alt="MINDEF Logo">
+        <div class="matrix-item-meta-text">
+          Scholarship Section, Dir. of Admin & Manpower,<br>Bolkiah Garrison, BSB, BB3510,<br>Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2386985 / +673 2386862
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Supreme Commander MINDEF Scholarship ✅</div>
+      <button class="matrix-rect-action-btn" onclick="showPage('mindef-gov-detail')">Click Here</button>
+    </div>
+
+    <!-- BRUNEI DARUSSALAM GOVERNMENT SCHOLARSHIP (BDGS) -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://upload.wikimedia.org/wikipedia/commons/c/c6/Ministry_of_Foreign_Affairs_Brunei_logo.svg" 
+             onerror="this.src='https://via.placeholder.com/80?text=MFA';" 
+             alt="MFA Logo">
+        <div class="matrix-item-meta-text">
+          Ministry of Foreign Affairs,<br>ICC, Jalan Berakas, BSB,<br>BB3910, Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2383374 / +673 2383386
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Brunei Darussalam Government Scholarship (BDGS)</div>
+      <button class="matrix-rect-action-btn" onclick="showPage('bdgs-gov-detail')">Click Here</button>
+    </div>
+
+  </div>
+</div>
+
+<div id="page-sub-menu-foreign" class="page-content">
+  <div class="view-container-title">SCHOLARSHIPS ABROAD</div>
+  <p style="color: #5f6368; margin-bottom: 25px;">Explore and access academic scheme layouts and details across foreign high commissions and embassies in Brunei Darussalam:</p>
+  
+  <div class="institution-card-matrix">
+    
+    <!-- HIGH COMMISSION OF INDIA -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://www.hcindiabrunei.gov.in/images/ashok_chakra.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=India';" 
+             alt="India High Commission Logo">
+        <div class="matrix-item-meta-text">
+          Lot No. 5375, Jalan Duta,<br>Kampong Anggerek Desa, BSB,<br>BB3713, Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2339947 / +673 2339685
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">High Commission of India ✅</div>
+      <button class="matrix-rect-action-btn" onclick="showPage('india-foreign-detail')">Click Here</button>
+    </div>
+
+    <!-- EMBASSY OF JAPAN -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQf5-yIYwWFnzK4D5j2byniyWZdaYCiBtRaoKGIhU3ud5L1ROk0Rw0QSg0&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=Japan';" 
+             alt="Embassy of Japan Logo">
+        <div class="matrix-item-meta-text">
+          House No. 33, Simpang 122,<br>Kampong Kiulap, BSB,<br>BE1518, Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2231447
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Embassy of Japan ✅</div>
+      <button class="matrix-rect-action-btn" onclick="showPage('japan-foreign-detail')">Click Here</button>
+    </div>
+
+    <!-- EMBASSY OF THE REPUBLIC OF KOREA -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://bruneimaps.com/wp-content/uploads/2024/05/Embassy-of-the-Republic-of-Korea-Logo.jpg" 
+             onerror="this.src='https://via.placeholder.com/80?text=Korea';" 
+             alt="Embassy of Korea Logo">
+        <div class="matrix-item-meta-text">
+          Lot No. 24160, Simpang 336-17,<br>Jalan Kebangsaan, Kampong Tilong,<br>BSB, BC3315, Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2330248 / +673 2330249
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Embassy of the Republic of Korea ✅</div>
+      <button class="matrix-rect-action-btn" onclick="showPage('korea-foreign-detail')">Click Here</button>
+    </div>
+
+    <!-- U.S. EMBASSY -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgtZAHh0SUcfGW-JU9K0p3iirlO2acho8k6efDswuKQRwJSQAEKSiPKEQ&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=USA';" 
+             alt="Embassy of the USA Logo">
+        <div class="matrix-item-meta-text">
+          Simpang 336-52-16-9,<br>Jalan Kebangsaan, BSB,<br>BC4115, Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2384616
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">U.S. Embassy ✅</div>
+      <button class="matrix-rect-action-btn" onclick="showPage('usa-foreign-detail')">Click Here</button>
+    </div>
+
+    <!-- EMBASSY OF THE REPUBLIC OF TÜRKIYE -->
+    <div class="profile-matrix-item">
+      <div class="matrix-item-top-row">
+        <img class="matrix-item-logo" 
+             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKMW1zErpYm0klfMIQgtw5GO4BsF3DwtZgOj4RJx-BC6tDfnC02zg-9Og&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=Turkiye';" 
+             alt="Embassy of Turkiye Logo">
+        <div class="matrix-item-meta-text">
+          No. 27, Simpang 52,<br>Kampong Manggis Satu, Jalan Muara,<br>BSB, BC3615, Brunei Darussalam<br><br>
+          <strong>Tel:</strong> +673 2339716
+        </div>
+      </div>
+      <div class="matrix-item-bold-title">Embassy of the Republic of Turkiye ✅</div>
+      <button class="matrix-rect-action-btn" onclick="showPage('turkiye-foreign-detail')">Click Here</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- UNIVERSITI BRUNEI DARUSSALAM (UBD) -->
+<div id="page-ubd-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-universities')">← Back to Universities</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/af/Universiti_Brunei_Darussalam_logo.svg/960px-Universiti_Brunei_Darussalam_logo.svg.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=UBD';" 
+             alt="UBD Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Universiti Brunei Darussalam (UBD)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Jalan Tungku Link, Gadong, BE1410, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2463001</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.ubd.edu.bn" target="_blank" rel="noopener noreferrer">www.ubd.edu.bn</a></div>
+      </div>
+    </div>
+    
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1CweJpKXYLmcKeFgunjgR8Ntm6Knyh1Zp/preview?rm=minimal" 
+              title="UBD Institutional Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- UNIVERSITI TEKNOLOGI BRUNEI (UTB) -->
+<div id="page-utb-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-universities')">← Back to Universities</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKZYbr_BBpDHb__1jEdsXOWU65Jh8bysXZNQ&s" 
+             onerror="this.src='https://via.placeholder.com/80?text=UTB';" 
+             alt="UTB Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Universiti Teknologi Brunei (UTB)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Jalan Tungku Link, Gadong, BE1410, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2461020</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.utb.edu.bn" target="_blank" rel="noopener noreferrer">www.utb.edu.bn</a></div>
+      </div>
+    </div>
+    
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1FzpejDCSYY59o_Fk7Z8rMr74peAyZlXP/preview?rm=minimal" 
+              title="UTB Institutional Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- UNIVERSITI ISLAM SULTAN SHARIF ALI (UNISSA) -->
+<div id="page-unissa-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-universities')">← Back to Universities</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://upload.wikimedia.org/wikipedia/en/2/24/Crest_of_Sultan_Sharif_Ali_Islamic_University.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=UNISSA';" 
+             alt="UNISSA Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Universiti Islam Sultan Sharif Ali (UNISSA)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Simpang 347, Jalan Pasar Gadong, Bandar Seri Begawan, BE1310, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2462000</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.unissa.edu.bn" target="_blank" rel="noopener noreferrer">www.unissa.edu.bn</a></div>
+      </div>
+    </div>
+    
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://docs.google.com/presentation/d/1B_03pt6rjLEUVKzEf-WE_qUHFsiT-vlR/preview?rm=minimal" 
+              title="UNISSA Institutional Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- KOLEJ UNIVERSITI PERGURUAN UGAMA SERI BEGAWAN (KUPU SB) -->
+<div id="page-kupusb-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-universities')">← Back to Universities</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://www.kupu-sb.edu.bn/wp-content/uploads/2025/08/kupusbLogo-scaled.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=KUPU+SB';" 
+             alt="KUPU SB Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Kolej Universiti Perguruan Ugama Seri Begawan (KUPU SB)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Jalan Raja Isteri Pengiran Anak Saleha, Bandar Seri Begawan, BA2111, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2201021</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.kupusb.edu.bn" target="_blank" rel="noopener noreferrer">www.kupusb.edu.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <!-- NOTE: Insert valid Google Drive File ID between '/d/' and '/preview' below when available -->
+      <iframe data-src="https://drive.google.com/file/d/YOUR_FILE_ID_HERE/preview?rm=minimal" 
+              title="KUPU SB Institutional Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 1. INSTITUTE OF BRUNEI TECHNICAL EDUCATION (IBTE) DETAIL VIEW -->
+<div id="page-ibte-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-technical')">← Back to Technical Institutions</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://upload.wikimedia.org/wikipedia/en/c/c9/Institute_of_Brunei_Technical_Education_logo.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=IBTE';" 
+             alt="IBTE Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Institute of Brunei Technical Education (IBTE)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Simpang 347, Jalan Pasar Baharu, Gadong, BE1310, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2425555</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://ibte.edu.bn" target="_blank" rel="noopener noreferrer">ibte.edu.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <!-- Replace YOUR_IBTE_FILE_ID with your Google Drive File ID -->
+      <iframe data-src="https://drive.google.com/file/d/YOUR_IBTE_FILE_ID/preview?rm=minimal" 
+              title="IBTE Institutional Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 2. POLITEKNIK BRUNEI (PB) DETAIL VIEW -->
+<div id="page-pb-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-technical')">← Back to Technical Institutions</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://upload.wikimedia.org/wikipedia/en/9/9f/Brunei_Polytechnic.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=PB';" 
+             alt="Politeknik Brunei Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Politeknik Brunei (PB)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Block 2E, Ong Sum Ping Condominium, Jalan Ong Sum Ping, BA1311, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2234630 / +673 2234650</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.pb.edu.bn" target="_blank" rel="noopener noreferrer">www.pb.edu.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/11qt2V830jyMi_h7dfd3Ly4hNykvLMXcp/preview?rm=minimal" 
+              title="Politeknik Brunei Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 3. PUSAT PEMBANGUNAN BELIA (PPB) DETAIL VIEW -->
+<div id="page-ppb-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-technical')">← Back to Technical Institutions</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://static.wixstatic.com/media/179b4c_686061c512f944e38c1b93541f24a58b~mv2.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=PPB';" 
+             alt="PPB Emblem">
+      </div>
+      <div class="info-details-container">
+        <h2>Pusat Pembangunan Belia (PPB)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Lebuhraya Muara - Tutong, Kg. Lambak Kanan, BC2515, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2393681 / +673 2393682</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.kkbs.gov.bn" target="_blank" rel="noopener noreferrer">www.kkbs.gov.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1CIHu8kxJkP8UaMOa0BNZhHrP9YUpFL_J/preview?rm=minimal" 
+              title="Pusat Pembangunan Belia Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 4. PUSAT LATIHAN KESENIAN DETAIL VIEW -->
+<div id="page-kesenian-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-technical')">← Back to Technical Institutions</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOQEDgowpM8m455gR5JMrkLXXkxFfUMVFF-Q&s" 
+             onerror="this.src='https://via.placeholder.com/80?text=Kesenian';" 
+             alt="Pusat Kesenian Emblem">
+      </div>
+      <div class="info-details-container">
+        <h2>Pusat Latihan Kesenian dan Pertukangan Tangan Brunei</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Jalan Resettlement, Bandar Seri Begawan, BS8111, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2240191 / +673 2240192</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.kkbs.gov.bn" target="_blank" rel="noopener noreferrer">www.kkbs.gov.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <!-- Replace YOUR_KESENIAN_FILE_ID with your Google Drive File ID -->
+      <iframe data-src="https://drive.google.com/file/d/YOUR_KESENIAN_FILE_ID/preview?rm=minimal" 
+              title="Pusat Kesenian Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 5. LIFELONG LEARNING CENTRE (L3C) DETAIL VIEW -->
+<div id="page-l3c-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-technical')">← Back to Technical Institutions</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://ihs.ubd.edu.bn/wp-content/uploads/2024/03/L3C-logo-colour-1024x231-1.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=L3C';" 
+             alt="L3C Emblem">
+      </div>
+      <div class="info-details-container">
+        <h2>Pusat Pembelajaran Sepanjang Hayat (L3C)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Jalan 10 Selatan, RPN Lambak Kanan, BC2315, Berakas B, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2346201</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://l3c.moe.gov.bn" target="_blank" rel="noopener noreferrer">l3c.moe.gov.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <!-- Replace YOUR_L3C_FILE_ID with your Google Drive File ID -->
+      <iframe data-src="https://drive.google.com/file/d/YOUR_L3C_FILE_ID/preview?rm=minimal" 
+              title="L3C Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 1. LAKSAMANA COLLEGE OF BUSINESS (LCB) DETAIL VIEW -->
+<div id="page-lcb-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-private')">← Back to Private Institutions</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLCFrfX2pR3C7ES4sFk-TaWveipsFZA8s2ooaolr5VePriwYTiCn3uZ6nN&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=LCB';" 
+             alt="LCB Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Laksamana College of Business (LCB)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Roof Top, Plaza Abdul Razak, Jalan Laksamana Abdul Razak, Km 2 Jalan Tutong, BSB, BA1712, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2238816 / +673 2238818</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.lcb.edu.bn" target="_blank" rel="noopener noreferrer">www.lcb.edu.bn</a></div>
+        <div class="info-meta-item"><strong>Instagram:</strong> <a class="info-link" href="https://www.instagram.com/lcb_brunei/" target="_blank" rel="noopener noreferrer">@lcb_brunei</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1Iv6HoV3MuSzuxqrf2j2ST7yWWW9uABO7/preview?rm=minimal" 
+              title="Laksamana College of Business Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 2. KOLEJ INTERNATIONAL GRADUATE STUDIES (KIGS) DETAIL VIEW -->
+<div id="page-kigs-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-private')">← Back to Private Institutions</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1vw99-x9L4HU_RLOg49jCgVjHtxa4fD71IhCDcEdb526FSn6F2AbY12I&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=KIGS';" 
+             alt="KIGS Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Kolej International Graduate Studies (KIGS)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Blok Tengah, Kompleks Setia Kenangan, Lot 22083 Kiulap, Mukim Gadong, BE1518, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2238701</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.kigs.edu.bn" target="_blank" rel="noopener noreferrer">www.kigs.edu.bn</a></div>
+        <div class="info-meta-item"><strong>Instagram:</strong> <a class="info-link" href="https://www.instagram.com/kigsbrunei/" target="_blank" rel="noopener noreferrer">@kigsbrunei</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <!-- Replace YOUR_KIGS_FILE_ID with your Google Drive File ID -->
+      <iframe data-src="https://drive.google.com/file/d/167rY17pALEQZQOdEXldgPUzrAggaQvW-/preview?rm=minimal" 
+              title="KIGS Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 3. COSMOPOLITAN COLLEGE OF COMMERCE & TECHNOLOGY (CCCT) DETAIL VIEW -->
+<div id="page-ccct-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-private')">← Back to Private Institutions</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTB0e_qWyn9MttYOrZim6FXaLMHIoHgXs1YzGOTP5nxg&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=CCCT';" 
+             alt="CCCT Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Cosmopolitan College of Commerce & Technology (CCCT)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Unit 3-6, Unit 8, 19 & 21, Jaya Setia Square, Spg 13, Kg Jaya Setia, Berakas, BSB, BB2713, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> WhatsApp: +673 8721244 / Tel: +673 2651244</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.ccct.edu.bn" target="_blank" rel="noopener noreferrer">www.ccct.edu.bn</a></div>
+        <div class="info-meta-item"><strong>Instagram:</strong> <a class="info-link" href="https://www.instagram.com/cosmopolitancollegebn/" target="_blank" rel="noopener noreferrer">@cosmopolitancollegebn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <!-- Replace YOUR_CCCT_FILE_ID with your Google Drive File ID -->
+      <iframe data-src="https://drive.google.com/file/d/YOUR_CCCT_FILE_ID/preview?rm=minimal" 
+              title="CCCT Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 4. JPMC COLLEGE OF HEALTH SCIENCES (JCHS) DETAIL VIEW -->
+<div id="page-jpmc-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-private')">← Back to Private Institutions</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTn6_bBSWenTQv46BU96tKIAYmdbSZChRK_EuGGYiBcSg&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=JCHS';" 
+             alt="JCHS Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>JPMC College of Health Sciences (JCHS)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Block 2C, East Wing, Jalan Ong Sum Ping, BSB, BA1311, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> General: +673 8994954 / Admission: +673 8661734</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.jchs.edu.bn/" target="_blank" rel="noopener noreferrer">www.jpmc-jchs.edu.bn</a></div>
+        <div class="info-meta-item"><strong>Instagram:</strong> <a class="info-link" href="https://www.instagram.com/jpmcbruneicollege/" target="_blank" rel="noopener noreferrer">@jpmcbruneicollege</a></div>
+      </div>
+    </div>
+    
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1g1miZR0PKDwX1vZyg9cpR_H1uyp4NczQ/preview?rm=minimal" 
+              title="JCHS Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 5. MICRONET INTERNATIONAL COLLEGE DETAIL VIEW -->
+<div id="page-micronet-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-private')">← Back to Private Institutions</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKdzel0ucRCtfyNYZuuDpdDRh4uFDQded5GXAuYfhmgA&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=Micronet';" 
+             alt="Micronet Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Micronet International College</h2>
+        <div class="info-meta-item"><strong>Address:</strong> No. 11 & 12, Kompleks Hj Tahir 2, Sg. Gadong Menglait, BSB, BE4119, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2451133 (Ext. 14/15/16/18)</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.micronet.com.bn" target="_blank" rel="noopener noreferrer">www.micronet.com.bn</a></div>
+        <div class="info-meta-item"><strong>Instagram:</strong> <a class="info-link" href="https://www.instagram.com/micronetbruneiig/" target="_blank" rel="noopener noreferrer">@micronetbruneiig</a></div>
+      </div>
+    </div>
+    
+    <div class="slides-wrapper landscape-view pdf-fix">
+      <iframe data-src="https://drive.google.com/file/d/1cyIDUislQoXK6hVOoRR-EaVn64TyJKYv/preview?rm=minimal" 
+              title="Micronet Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 6. KEMUDA INSTITUTE DETAIL VIEW -->
+<div id="page-kemuda-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-private')">← Back to Private Institutions</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://upload.wikimedia.org/wikipedia/en/b/ba/Kemuda-logo.gif" 
+             onerror="this.src='https://via.placeholder.com/80?text=Kemuda';" 
+             alt="Kemuda Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Kemuda Institute</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Jalan Beribi, Mukim Gadong, BE1118, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2448679</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.kemudainstitute.com/" target="_blank" rel="noopener noreferrer">www.kemudainstitute.com</a></div>
+        <div class="info-meta-item"><strong>Instagram:</strong> <a class="info-link" href="https://www.instagram.com/kemudainstitute/" target="_blank" rel="noopener noreferrer">@kemudainstitute</a></div>
+      </div>
+    </div>
+    
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://docs.google.com/presentation/d/1Nv4NHI2CbyMrFnLlhq2M4AQ-1nXjMHkC/preview?rm=minimal" 
+              title="Kemuda Institute Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 7. HADTECH COLLEGE DETAIL VIEW -->
+<div id="page-hadtech-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-private')">← Back to Private Institutions</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://hadtech.edu.bn/wp-content/uploads/elementor/thumbs/Hadtech_College_Logo-1-3-r34m9d2ef2ah84xw0qegpiyv6jh9a2vrtbp55ayhjk.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=HADtech';" 
+             alt="HADtech Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>HADtech College</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Simpang 175, Jalan Telanai, BSB, BA2312, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 7373900 / +673 2650566</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://hadtech.edu.bn/" target="_blank" rel="noopener noreferrer">hadtech.edu.bn</a></div>
+        <div class="info-meta-item"><strong>Instagram:</strong> <a class="info-link" href="https://www.instagram.com/hadtech.college/" target="_blank" rel="noopener noreferrer">@hadtech.college</a></div>
+      </div>
+    </div>
+    
+    <div class="slides-wrapper landscape-view pdf-fix">
+      <iframe data-src="https://drive.google.com/file/d/1J9HD6Gpso1blUsPHPnJW8DUMu4oD8TEj/preview?rm=minimal" 
+              title="HADtech College Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 8. BICPA ACADEMY DETAIL VIEW -->
+<div id="page-bicpa-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-private')">← Back to Private Institutions</button>
+
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://bicpabrunei.com/wp-content/uploads/2022/08/favico-300x300.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=BICPA';" 
+             alt="BICPA Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>BICPA Academy</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Unit 1-3, 1st Floor, Block A, Regent Square, Simpang 150, Kiulap, BE1518, BSB, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2233945</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://bicpabrunei.com/" target="_blank" rel="noopener noreferrer">www.bicpabrunei.com</a></div>
+        <div class="info-meta-item"><strong>Instagram:</strong> <a class="info-link" href="https://www.instagram.com/bicpa/" target="_blank" rel="noopener noreferrer">@bicpa</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view pdf-fix">
+      <iframe data-src="https://drive.google.com/file/d/1WyOZ5wvOiAvJwPt2LoLLlrz6ttwtLmqY/preview?rm=minimal" 
+              title="BICPA Academy Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 9. UNIKLEARN (AN-NUR HARAPAN) DETAIL VIEW -->
+<div id="page-uniklearn-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-private')">← Back to Private Institutions</button>
+
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://www.annurharapan.com/assets/an-nur/img/logo/Vector-Smart-Object.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=Uniklearn';" 
+             alt="Uniklearn Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Uniklearn (An-Nur Harapan)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> B17, Simpang 336-52, Jalan Kebangsaan, Kg. Sungai Akar, BA1210, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 8123736</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.annurharapan.com/" target="_blank" rel="noopener noreferrer">www.annurharapan.com</a></div>
+        <div class="info-meta-item"><strong>Instagram:</strong> <a class="info-link" href="https://www.instagram.com/uniklearn/" target="_blank" rel="noopener noreferrer">@uniklearn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view pdf-fix">
+      <iframe data-src="https://drive.google.com/file/d/1HH2veCxpOB2ZBVgCndtpWQBQ1BGb1Tqj/preview?rm=minimal" 
+              title="Uniklearn Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 1. FINDLAY EDUCATION SERVICES DETAIL VIEW -->
+<div id="page-findlay-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-training')">← Back to Education Providers</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://findlaybsb.com/wp-content/uploads/2022/05/New-Logo-1-267x300.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=Findlay';" 
+             alt="Findlay Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Findlay Education Services</h2>
+        <div class="info-meta-item"><strong>Address:</strong> E2, 1st Floor, Abdul Razak Complex, Jalan Gadong, BE3519, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2428658</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://findlaybsb.com/" target="_blank" rel="noopener noreferrer">www.findlaybsb.com</a></div>
+        <div class="info-meta-item"><strong>Instagram:</strong> <a class="info-link" href="https://www.instagram.com/findlaybsb/" target="_blank" rel="noopener noreferrer">@findlaybsb</a></div>
+      </div>
+    </div>
+    
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1maynYNnw1vDnkJMtUXIeSDjXHFIIgxaN/preview?rm=minimal" 
+              title="Findlay Education Services Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 2. HRD SERVICES (HRDS) DETAIL VIEW -->
+<div id="page-hrds-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('inst-training')">← Back to Education Providers</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCr5v8sHdnABUJtWhYTvUZ3FFhTe-hYP2A4JqrQ_35sPDdizhzD1bz50E&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=HRDS';" 
+             alt="HRDS Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>HRD Services (HRDS)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> SEAMEO VOCTECH Regional Centre, Jalan Pasar Baharu, Gadong, BE1318, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2452245</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.hrdseducation.com/" target="_blank" rel="noopener noreferrer">www.hrdseducation.com</a></div>
+        <div class="info-meta-item"><strong>Instagram:</strong> <a class="info-link" href="https://www.instagram.com/hrdseducation" target="_blank" rel="noopener noreferrer">@hrdseducation</a></div>
+      </div>
+    </div>
+    
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1aPj55LIPIkOWajhTFj7dlqOGPY3b0utS/preview?rm=minimal" 
+              title="HRD Services Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 1. MINISTRY OF EDUCATION (MOE) LOCAL SCHOLARSHIP DETAIL VIEW -->
+<div id="page-moe-gov-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('sub-menu-gov')">← Back to Government Scholarships</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaPLu31gh2NfVv9Tz-0KHmCPxWJcZfTWpreCi7Lz0AIC78R1H_gnxDKVlL&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=MOE';" 
+             alt="MOE Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Ministry of Education (MOE) Local Scholarship</h2>
+        <div class="info-meta-item"><strong>Department:</strong> Department of Scholarship Management</div>
+        <div class="info-meta-item"><strong>Address:</strong> 5th Floor, Block C, Old Airport Road, Berakas, BB3510, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2380019 / +673 2380701</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.moe.gov.bn/SitePages/Department%20of%20Scholarship%20Management.aspx" target="_blank" rel="noopener noreferrer">www.moe.gov.bn</a></div>
+      </div>
+    </div>
+    
+    <div class="slides-wrapper portrait-view">
+      <iframe data-src="https://docs.google.com/presentation/d/1wdyWtuQ3xAVjrEkKZv4StKlh1qS4RglA/preview?rm=minimal" 
+              title="MOE Local Scholarship Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 2. SULTAN'S SCHOLAR SCHOLARSHIP SCHEME DETAIL VIEW -->
+<div id="page-sultan-gov-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('sub-menu-gov')">← Back to Government Scholarships</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSI9lepNidy6ojS40lrTzwWjxq9J1N5V4KHnmKhU4ayNASo6K8jfg9524s&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=Sultan%27s+Scholar';" 
+             alt="Sultan's Scholar Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Sultan's Scholar Scholarship Scheme</h2>
+        <div class="info-meta-item"><strong>Managed By:</strong> Yayasan Sultan Haji Hassanal Bolkiah</div>
+        <div class="info-meta-item"><strong>Address:</strong> Bahagian Biasiswa "Sultan's Scholar", Ibu Pejabat Yayasan Sultan Haji Hassanal Bolkiah, Jalan Perdana Menteri, BSB, BA1511, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2234085 / +673 2234087</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://sultansscholar.yshhb.org.bn/kriteria-kelayakan/" target="_blank" rel="noopener noreferrer">sultansscholar.yshhb.org.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <!-- Replace YOUR_SULTAN_SCHOLAR_FILE_ID with your Google Drive File ID -->
+      <iframe data-src="https://drive.google.com/file/d/YOUR_SULTAN_SCHOLAR_FILE_ID/preview?rm=minimal" 
+              title="Sultan's Scholar Scholarship Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 3. SUPREME COMMANDER ROYAL BRUNEI ARMED FORCES SCHOLARSHIP DETAIL VIEW -->
+<div id="page-mindef-gov-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('sub-menu-gov')">← Back to Government Scholarships</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://www.mindef.gov.bn/wp-content/uploads/2025/08/Mindef-Logo-Edited-Edited.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=MINDEF';" 
+             alt="MINDEF Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Supreme Commander Royal Brunei Armed Forces Scholarship</h2>
+        <div class="info-meta-item"><strong>Managed By:</strong> Ministry of Defence (MINDEF)</div>
+        <div class="info-meta-item"><strong>Address:</strong> Scholarship Section, Directorate of Administration and Manpower, Ministry of Defence, Bolkiah Garrison, BB3510, BSB, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2386985 / +673 2386862 / +673 2386811</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://scholarship.mindef.gov.bn" target="_blank" rel="noopener noreferrer">www.mindef.gov.bn</a></div>
+      </div>
+    </div>
+    
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1T4WZM6snbnpqQmRAZuq8JgzeUW3MkmP8/preview?rm=minimal" 
+              title="Supreme Commander RBAF Scholarship Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 4. BRUNEI DARUSSALAM GOVERNMENT SCHOLARSHIP (BDGS) FOR FOREIGN STUDENTS DETAIL VIEW -->
+<div id="page-bdgs-gov-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('sub-menu-gov')">← Back to Government Scholarships</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c6/Ministry_of_Foreign_Affairs_Brunei_logo.svg" 
+             onerror="this.src='https://via.placeholder.com/80?text=BDGS';" 
+             alt="BDGS Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Brunei Darussalam Government Scholarship (BDGS) For Foreign Students</h2>
+        <div class="info-meta-item"><strong>Managed By:</strong> Ministry of Foreign Affairs (MFA)</div>
+        <div class="info-meta-item"><strong>Address:</strong> International Convention Centre, Jalan Berakas, BSB, BB3910, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2383374 / +673 2383386</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.mfa.gov.bn/pages/scholarship.aspx" target="_blank" rel="noopener noreferrer">www.mfa.gov.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <!-- Replace YOUR_BDGS_FILE_ID with your Google Drive File ID -->
+      <iframe data-src="https://drive.google.com/file/d/YOUR_BDGS_FILE_ID/preview?rm=minimal" 
+              title="BDGS Scholarship Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 1. HIGH COMMISSION OF INDIA DETAIL VIEW -->
+<div id="page-india-foreign-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('sub-menu-foreign')">← Back to Scholarships Abroad</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://www.hcindiabrunei.gov.in/images/ashok_chakra.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=India';" 
+             alt="India High Commission Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>High Commission of India in Brunei Darussalam</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Lot No. 5375, Jalan Duta, Kampong Anggerek Desa, BSB, BB3713, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2339947 / +673 2339685</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.hcindiabrunei.gov.in" target="_blank" rel="noopener noreferrer">www.hcindiabrunei.gov.in</a></div>
+      </div>
+    </div>
+    
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://docs.google.com/presentation/d/1ohKrmAAKDA8397duF7UUfkjVqFJYNBDF/preview?rm=minimal" 
+              title="High Commission of India Scholarship Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 2. EMBASSY OF JAPAN DETAIL VIEW -->
+<div id="page-japan-foreign-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('sub-menu-foreign')">← Back to Scholarships Abroad</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQf5-yIYwWFnzK4D5j2byniyWZdaYCiBtRaoKGIhU3ud5L1ROk0Rw0QSg0&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=Japan';" 
+             alt="Embassy of Japan Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Embassy of Japan in Brunei Darussalam</h2>
+        <div class="info-meta-item"><strong>Address:</strong> House No. 33, Simpang 122, Kampong Kiulap, BSB, BE1518, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2231447</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://www.bn.emb-japan.go.jp" target="_blank" rel="noopener noreferrer">www.bn.emb-japan.go.jp</a></div>
+      </div>
+    </div>
+    
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1syFuLJXdXMgL3JMDoue4QAxpV1F-BPT9/preview?rm=minimal" 
+              title="Embassy of Japan Scholarship Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 3. EMBASSY OF THE REPUBLIC OF KOREA DETAIL VIEW -->
+<div id="page-korea-foreign-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('sub-menu-foreign')">← Back to Scholarships Abroad</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://bruneimaps.com/wp-content/uploads/2024/05/Embassy-of-the-Republic-of-Korea-Logo.jpg" 
+             onerror="this.src='https://via.placeholder.com/80?text=Korea';" 
+             alt="Embassy of Korea Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Embassy of the Republic of Korea in Brunei Darussalam</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Lot No. 24160, Simpang 336-17, Jalan Kebangsaan, Kampong Tilong, BSB, BC3315, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2330248 / +673 2330249</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://overseas.mofa.go.kr/bn-en/index.do" target="_blank" rel="noopener noreferrer">overseas.mofa.go.kr/bn-en</a></div>
+      </div>
+    </div>
+    
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1WL0EmPBCtRVwf-xCFh0Dmpzt00HAC8CU/preview?rm=minimal" 
+              title="Embassy of Korea Scholarship Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 4. U.S. EMBASSY DETAIL VIEW -->
+<div id="page-usa-foreign-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('sub-menu-foreign')">← Back to Scholarships Abroad</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgtZAHh0SUcfGW-JU9K0p3iirlO2acho8k6efDswuKQRwJSQAEKSiPKEQ&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=USA';" 
+             alt="U.S. Embassy Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>U.S. Embassy</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Simpang 336-52-16-9, Jalan Kebangsaan, BSB, BC4115, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2384616</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://bn.usembassy.gov" target="_blank" rel="noopener noreferrer">bn.usembassy.gov</a></div>
+      </div>
+    </div>
+    
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1xLLp0v-m4WHO7r37swwa2QdxybDvj4jw/preview?rm=minimal" 
+              title="U.S. Embassy Scholarship Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 5. EMBASSY OF THE REPUBLIC OF TÜRKİYE DETAIL VIEW -->
+<div id="page-turkiye-foreign-detail" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('sub-menu-foreign')">← Back to Scholarships Abroad</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKMW1zErpYm0klfMIQgtw5GO4BsF3DwtZgOj4RJx-BC6tDfnC02zg-9Og&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=Turkiye';" 
+             alt="Embassy of Turkiye Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Embassy of the Republic of Turkiye in Brunei Darussalam</h2>
+        <div class="info-meta-item"><strong>Address:</strong> No. 27, Simpang 52, Kampong Manggis Satu, Jalan Muara, BSB, BC3615, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2339716</div>
+        <div class="info-meta-item"><strong>Website:</strong> <a class="info-link" href="https://bsb.emb.mfa.gov.tr" target="_blank" rel="noopener noreferrer">bsb.emb.mfa.gov.tr</a></div>
+      </div>
+    </div>
+    
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1EogG7XO5UOrIOjUysM-FnXeVGCyQAkwe/preview?rm=minimal" 
+              title="Embassy of Turkiye Scholarship Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 1. ROYAL BRUNEI ARMED FORCES (RBAF / ABDB) DETAIL VIEW -->
+<div id="page-page-rbaf" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://upload.wikimedia.org/wikipedia/en/0/01/Ministry_of_Defence_%28Brunei%29.jpeg" 
+             onerror="this.src='https://via.placeholder.com/80?text=RBAF';" 
+             alt="RBAF Crest">
+      </div>
+      <div class="info-details-container">
+        <h2>Royal Brunei Armed Forces (RBAF / ABDB)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Ministry of Defence, Bolkiah Garrison, BB3510, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2386000 / +673 2386300</div>
+        <div class="info-meta-item"><strong>Recruitment Portal:</strong> <a class="info-link" href="https://www.mindef.gov.bn" target="_blank" rel="noopener noreferrer">www.mindef.gov.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1Y6cx9TK2jnmaHOitCfzluKHwpibzxwMh/preview?rm=minimal" 
+              title="Royal Brunei Armed Forces Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 2. ROYAL BRUNEI POLICE FORCE (RBPF / PDB) DETAIL VIEW -->
+<div id="page-page-rbpf" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/03/Emblem_of_the_Royal_Brunei_Police_Force.svg" 
+             onerror="this.src='https://via.placeholder.com/80?text=RBPF';" 
+             alt="RBPF Crest">
+      </div>
+      <div class="info-details-container">
+        <h2>Royal Brunei Police Force (RBPF / PDB)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> RBPF Headquarters, Jalan Tungku Link, Gadong, BE1110, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2459500</div>
+        <div class="info-meta-item"><strong>Official Hub:</strong> <a class="info-link" href="https://www.police.gov.bn" target="_blank" rel="noopener noreferrer">www.police.gov.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1kRzM8IUAkcN94UacJ6cjmvfVLK2R5ch1/preview?rm=minimal" 
+              title="Royal Brunei Police Force Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 3. FIRE AND RESCUE DEPARTMENT (BOMBA) DETAIL VIEW -->
+<div id="page-page-bomba" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAarSnQbtt0HX0rWJDGkNUrUv0AKH49gpXbnlQUtxCAhwRnRSbS5Mv94E&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=Bomba';" 
+             alt="Bomba Crest">
+      </div>
+      <div class="info-details-container">
+        <h2>Fire and Rescue Department (Jabatan Bomba dan Penyelamat)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Fire and Rescue Headquarters, Old Airport Road, Berakas, BSB, BB3513, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2380937 / Emergency: 995</div>
+        <div class="info-meta-item"><strong>Official Registry:</strong> <a class="info-link" href="https://www.fire-rescue.gov.bn" target="_blank" rel="noopener noreferrer">www.fire-rescue.gov.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/14ewQdT_HImVa1rwO0dM0kukSTilkFQy4/preview?rm=minimal" 
+              title="Fire and Rescue Department Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 4. PRISONS DEPARTMENT (PENJARA) DETAIL VIEW -->
+<div id="page-page-penjara" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://upload.wikimedia.org/wikipedia/en/4/4e/Brunei_Prison_Department.jpeg" 
+             onerror="this.src='https://via.placeholder.com/80?text=Penjara';" 
+             alt="Prisons Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Prisons Department (Jabatan Penjara)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Prisons Department Headquarters, Jalan Jerudong, BG3122, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2661266</div>
+        <div class="info-meta-item"><strong>Official Webspace:</strong> <a class="info-link" href="https://www.prisons.gov.bn" target="_blank" rel="noopener noreferrer">www.prisons.gov.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <!-- Replace YOUR_PENJARA_FILE_ID with your Google Drive File ID -->
+      <iframe data-src="https://drive.google.com/file/d/1fn4nNhfyAltH7-Lp8M9-kteLg1KnSAN8/preview?rm=minimal" 
+              title="Prisons Department Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 1. MINISTRY OF HEALTH (MOH) DETAIL VIEW -->
+<div id="page-page-moh" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://moh.gov.bn/wp-content/uploads/2023/11/moh-logo-square.png" 
+             onerror="this.src='https://via.placeholder.com/80?text=MOH';" 
+             alt="MoH Crest">
+      </div>
+      <div class="info-details-container">
+        <h2>Ministry of Health (MoH)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Jalan Commonwealth Drive, BSB, BB3913, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2381640</div>
+        <div class="info-meta-item"><strong>Official Webspace:</strong> <a class="info-link" href="https://www.moh.gov.bn" target="_blank" rel="noopener noreferrer">www.moh.gov.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1SJ2CSDtbcyoqgN-cUIJk1EhBPq6rMpCO/preview?rm=minimal" 
+              title="Ministry of Health Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 2. BRUNEI DARUSSALAM METEOROLOGICAL DEPARTMENT (BDMD) DETAIL VIEW -->
+<div id="page-page-met" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZUpAs9YJgkhLG8FQzHmxNj2iZ1zJgjUnnLWZswQ40&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=BDMD';" 
+             alt="BDMD Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Brunei Darussalam Meteorological Department (BDMD)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Block B23, 37, Anggerek Desa Apartment, Simpang 32, BSB, BB3713, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2381342</div>
+        <div class="info-meta-item"><strong>Official Webspace:</strong> <a class="info-link" href="https://www.met.gov.bn" target="_blank" rel="noopener noreferrer">www.met.gov.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1AeDgkbGuwtBxhWBiSGchow5Fv1IY9AUp/preview?rm=minimal" 
+              title="Brunei Darussalam Meteorological Department Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 3. RADIO TELEVISYEN BRUNEI (RTB) DETAIL VIEW -->
+<div id="page-page-rtb" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQnI413F5FN6oVRSow2z2vzVV4k9EURkf1qgRoEJTUQA&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=RTB';" 
+             alt="RTB Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Radio Televisyen Brunei (RTB)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Jalan Elizabeth II, BSB, BS8611, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2242296 / +673 2242297</div>
+        <div class="info-meta-item"><strong>Official Webspace:</strong> <a class="info-link" href="https://www.rtb.gov.bn" target="_blank" rel="noopener noreferrer">www.rtb.gov.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1t80PqE3sIWGD4up4GsD0LMkvwcGjIKRX/preview?rm=minimal" 
+              title="Radio Televisyen Brunei Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 4. TOURISM DEVELOPMENT DEPARTMENT DETAIL VIEW -->
+<div id="page-page-tourism" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJ0CCvL0ngHyLxv99A1ffynFqckGAxoOJoztc5RLVM75EMzcb1HpAoLHB3&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=Tourism';" 
+             alt="Tourism Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Tourism Development Department</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Ministry of Primary Resources and Tourism, Jalan Menteri Besar, BSB, BB3913, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2382822</div>
+        <div class="info-meta-item"><strong>Official Webspace:</strong> <a class="info-link" href="https://www.tourism.gov.bn" target="_blank" rel="noopener noreferrer">www.tourism.gov.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1eZpx5LGKWZwVIF42NnmUcfzWhhN-o1mS/preview?rm=minimal" 
+              title="Tourism Development Department Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 5. ROYAL BRUNEI AIRLINES (RBA) CAMPUS DETAIL VIEW -->
+<div id="page-page-rba" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYVG21Q0lhpiQTa_jGVl64LMssQNXNKC8eGcozYQx7WZH2A9dTNSdWw8jR&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=RBA';" 
+             alt="RBA Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Royal Brunei Airlines Campus</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Jalan Kustin, Berakas A, BSB, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2212222</div>
+        <div class="info-meta-item"><strong>Instagram:</strong> <a class="info-link" href="https://www.instagram.com/royalbruneiair" target="_blank" rel="noopener noreferrer">@royalbruneiair</a></div>
+        <div class="info-meta-item"><strong>Careers Site:</strong> <a class="info-link" href="https://www.flyroyalbrunei.com" target="_blank" rel="noopener noreferrer">www.flyroyalbrunei.com</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1_LaQYg6pNScseRGTpzau6hW14D0YFQSf/preview?rm=minimal" 
+              title="Royal Brunei Airlines Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 6. BRUNEI DARUSSALAM NATIONAL ACCREDITATION COUNCIL (BDNAC) DETAIL VIEW -->
+<div id="page-page-bdnac" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcnlWffd9BBK8sWH4EXU5RLavCkhgsjf81BqVJS2kAHmLUpFmaI9KWMM2l&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=BDNAC';" 
+             alt="BDNAC Crest">
+      </div>
+      <div class="info-details-container">
+        <h2>Brunei Darussalam National Accreditation Council (BDNAC)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Ministry of Education, 2nd Floor, Block B, Jalan Lapangan Terbang Lama, Berakas, BB3510, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2380017 / +673 2381224</div>
+        <div class="info-meta-item"><strong>Official Webspace:</strong> <a class="info-link" href="https://www.moe.gov.bn" target="_blank" rel="noopener noreferrer">www.moe.gov.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1pYljNYH-BsiEr4TBuzexJ81OreFBgzFU/preview?rm=minimal" 
+              title="BDNAC Profile Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 7. DEPARTMENT OF HIGHER EDUCATION (HED), MOE DETAIL VIEW -->
+<div id="page-page-hed" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcnlWffd9BBK8sWH4EXU5RLavCkhgsjf81BqVJS2kAHmLUpFmaI9KWMM2l&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=HED';" 
+             alt="MOE Crest">
+      </div>
+      <div class="info-details-container">
+        <h2>Department of Higher Education, Ministry of Education</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Ministry of Education, 5th Floor, Block B, Jalan Lapangan Terbang Lama, Berakas, BB3510, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2381133 / +673 2381224</div>
+        <div class="info-meta-item"><strong>Official Webspace:</strong> <a class="info-link" href="https://www.moe.gov.bn" target="_blank" rel="noopener noreferrer">www.moe.gov.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1eDYCxg5w8Cn1DmQIiuPxWmTRda-_Cy3R/preview?rm=minimal" 
+              title="Department of Higher Education Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 8. DEPARTMENT OF EDUCATORS MANAGEMENT (JPP), MOE DETAIL VIEW -->
+<div id="page-page-jpp" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcnlWffd9BBK8sWH4EXU5RLavCkhgsjf81BqVJS2kAHmLUpFmaI9KWMM2l&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=JPP';" 
+             alt="MOE Crest">
+      </div>
+      <div class="info-details-container">
+        <h2>Department of Educators Management, Ministry of Education</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Level 3, Block A, Ministry of Education, Jalan Lapangan Terbang Lama, Berakas, BB3510, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2381133 ext. 1305/1306/1307</div>
+        <div class="info-meta-item"><strong>Official Webspace:</strong> <a class="info-link" href="https://www.moe.gov.bn" target="_blank" rel="noopener noreferrer">www.moe.gov.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1hP4pI4elonbGpu_W5D6FQVtV45Saexr2/preview?rm=minimal" 
+              title="Department of Educators Management Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 1. DATASTREAM DIGITAL SDN BHD (DST) DETAIL VIEW -->
+<div id="page-page-corp-dst" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://portal.powertec.com.au/sites/default/files/styles/scale_square/public/2023-11/DST-Communication-Brunei-Logo.png.webp?itok=la85BNYL" 
+             onerror="this.src='https://via.placeholder.com/80?text=DST';" 
+             alt="DST Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Datastream Digital Sdn Bhd (DST)</h2>
+        <div class="info-meta-item"><strong>Address:</strong> DST Headquarters, Tungku Link Road, BSB, BE3619, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2410888 / 151 (Local Customer Care)</div>
+        <div class="info-meta-item"><strong>Instagram:</strong> <a class="info-link" href="https://www.instagram.com/dstbn" target="_blank" rel="noopener noreferrer">@dstbn</a></div>
+        <div class="info-meta-item"><strong>Corporate Route:</strong> <a class="info-link" href="https://www.dst.com.bn" target="_blank" rel="noopener noreferrer">www.dst.com.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <!-- Replace YOUR_DST_FILE_ID with your Google Drive File ID -->
+      <iframe data-src="https://drive.google.com/file/d/YOUR_DST_FILE_ID/preview?rm=minimal" 
+              title="Datastream Digital Sdn Bhd Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 2. HIBISCUS EP (BRUNEI) B.V. DETAIL VIEW -->
+<div id="page-page-corp-hibiscus" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4uJ3YH6laBLCB0fq1DSO3rPsny0yXuPYgBrebdtpsexgPG3OonaQxqeVo&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=Hibiscus';" 
+             alt="Hibiscus Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>Hibiscus EP (Brunei) B.V.</h2>
+        <div class="info-meta-item"><strong>Address:</strong> Level 6, Pavo Point, Simpang 37, Jalan Kianggeh, BSB, BA1211, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 2229269</div>
+        <div class="info-meta-item"><strong>Instagram:</strong> <a class="info-link" href="https://www.instagram.com/hibiscuspetroleum_bn/" target="_blank" rel="noopener noreferrer">@hibiscuspetroleum_bn</a></div>
+        <div class="info-meta-item"><strong>Corporate Hub:</strong> <a class="info-link" href="https://www.hibiscuspetroleum.com" target="_blank" rel="noopener noreferrer">www.hibiscuspetroleum.com</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1KJ0dEZxLNj6CxQgGwFqo6ranjYC_J9GO/preview?rm=minimal" 
+              title="Hibiscus EP Brunei Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- 3. AEGIS SECURE SOLUTIONS DETAIL VIEW -->
+<div id="page-page-corp-aegis" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTV_RjIW4GJI8hAqZfjMshZ6CT1J0_25eSxCtgw3QTMOQ&s=10" 
+             onerror="this.src='https://via.placeholder.com/80?text=AEGIS';" 
+             alt="AEGIS Logo">
+      </div>
+      <div class="info-details-container">
+        <h2>AEGIS Secure Solutions</h2>
+        <div class="info-meta-item"><strong>Address:</strong> LB 127, Simpang 164, Jalan Raja Isteri Pengiran Anak Saleha, BSB, BA2112, Brunei Darussalam</div>
+        <div class="info-meta-item"><strong>Contact Number:</strong> +673 8333839 (Enquiries) / +673 8332600 (Recruitment)</div>
+        <div class="info-meta-item"><strong>Instagram:</strong> <a class="info-link" href="https://www.instagram.com/aegis.brunei/" target="_blank" rel="noopener noreferrer">@aegis.brunei</a></div>
+        <div class="info-meta-item"><strong>Corporate Hub:</strong> <a class="info-link" href="https://www.aegis.com.bn" target="_blank" rel="noopener noreferrer">www.aegis.com.bn</a></div>
+      </div>
+    </div>
+
+    <div class="slides-wrapper landscape-view">
+  <!-- The invisible shield intercepts top-bar clicks -->
+  <div class="top-header-shield"></div>
+      <iframe data-src="https://drive.google.com/file/d/1GVyTcFur1ews7FqdJr7iEFvfIkxQwX42/preview?rm=minimal" 
+              title="AEGIS Secure Solutions Presentation" 
+              loading="lazy" 
+allowfullscreen
+              style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<div id="page-admission" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+  
+  <div class="portal-container">
+    <div class="info-profile-header" style="margin-bottom: 25px;">
+      <div class="info-details-container">
+        <h2>Admission, Scholarship & Job Central Portals</h2>
+        <p class="section-subtitle" style="color: #666; margin-bottom: 0; font-size: 1rem;">
+          Direct portals for higher education, technical admission systems, scholarship platforms, and national job recruitment.
+        </p>
+      </div>
+    </div>
+
+<!-- CATEGORY 1: EDUCATION ADMISSIONS -->
+<h3 style="font-size: 1.1rem; color: #0d3a58; font-weight: 700; margin: 15px 0 15px 0; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
+  🎓 Education & Scholarship Admissions
+</h3>
+
+<!-- ADMISSION CARDS GRID (2x2) -->
+<div class="admission-grid">
+  
+  <!-- 1. HECAS -->
+  <div class="admission-card">
+    <div class="admission-col-left">
+      <div class="logo-box logo-black">
+        <div class="hecas-logo-circle">HECAS</div>
+      </div>
+      <a href="https://hecas.moe.gov.bn/" target="_blank" rel="noopener" class="btn-click-here">Click Here</a>
+    </div>
+    <div class="admission-col-right">
+      <h3>Higher Education Centralized Admission System</h3>
+      <p class="contact-info"><strong>Tel:</strong> +6732381992 / +6732381224</p>
+      <div class="icon-row">
+        <a href="https://hecas.moe.gov.bn/" target="_blank" rel="noopener" class="circle-icon" title="Official Website">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+        </a>
+        <a href="mailto:ask.hecas@moe.gov.bn" class="circle-icon" title="Email Direct">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. POLITEKNIK BRUNEI (PBAS) -->
+  <div class="admission-card">
+    <div class="admission-col-left">
+      <div class="logo-box">
+        <img src="https://pb.edu.bn/wp-content/uploads/2021/08/PB_Logo_Updated.png?x52940" 
+             alt="Politeknik Brunei Logo" 
+             style="max-width: 100%; max-height: 75px; object-fit: contain;" 
+             onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'hecas-logo-circle\' style=\'background:#0d3a58; font-size:10px;\'>PBAS PB</div>';">
+      </div>
+      <a href="https://pbas.pb.edu.bn/" target="_blank" rel="noopener" class="btn-click-here">Click Here</a>
+    </div>
+    <div class="admission-col-right">
+      <h3>Politeknik Brunei Admission System (PBAS)</h3>
+      <p class="contact-info"><strong>Tel:</strong> +673 2234630 / +673 2234650</p>
+      <div class="icon-row">
+        <a href="https://pbas.pb.edu.bn/" target="_blank" rel="noopener" class="circle-icon" title="Official PBAS Portal">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+        </a>
+        <a href="mailto:admission@pb.edu.bn" class="circle-icon" title="Email Admission Direct">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. IBTE TVeCAS -->
+  <div class="admission-card">
+    <div class="admission-col-left">
+      <div class="logo-box">
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c9/Institute_of_Brunei_Technical_Education_logo.png/330px-Institute_of_Brunei_Technical_Education_logo.png" alt="IBTE TVeCAS" style="max-width: 100%; max-height: 80px; object-fit: contain;" onerror="this.onerror=null; this.parentNode.innerHTML='<strong style=\'color:#1d4ed8;\'>IBTE TVeCAS</strong>';">
+      </div>
+      <a href="https://ibte.edu.bn/tvecas/" target="_blank" rel="noopener" class="btn-click-here">Click Here</a>
+    </div>
+    <div class="admission-col-right">
+      <h3>IBTE TVeCAS</h3>
+      <p class="contact-info"><strong>Tel:</strong> +6732425555</p>
+      <p class="contact-info"><strong>Fax:</strong> +6732422303</p>
+      <div class="icon-row">
+        <a href="https://ibte.edu.bn/tvecas/" target="_blank" rel="noopener" class="circle-icon" title="Official Website">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. UCAS -->
+  <div class="admission-card">
+    <div class="admission-col-left">
+      <div class="logo-box">
+        <img src="https://logowik.com/content/uploads/images/ucas3712.logowik.com.webp" alt="UCAS Logo" style="max-width: 100%; max-height: 70px; object-fit: contain;" onerror="this.onerror=null; this.parentNode.innerHTML='<strong style=\'color:#e11d48;\'>UCAS</strong>';">
+      </div>
+      <a href="https://www.ucas.com/" target="_blank" rel="noopener" class="btn-click-here">Click Here</a>
+    </div>
+    <div class="admission-col-right">
+      <h3>UCAS</h3>
+      <p class="contact-info"><strong>UK:</strong> 03714680468</p>
+      <p class="contact-info"><strong>International number:</strong> +443303330230</p>
+      <div class="icon-row">
+        <a href="https://www.ucas.com/" target="_blank" rel="noopener" class="circle-icon" title="Official Website">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+        </a>
+        <a href="https://www.facebook.com/ucasonline" target="_blank" rel="noopener" class="circle-icon" title="Facebook Page">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H7.5v-3H10V9.5C10 7.01 11.49 5.6 13.75 5.6c1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.77-1.62 1.56V12h2.77l-.44 3h-2.33v6.8c4.56-.93 8-4.96 8-9.8z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/ucas_online" target="_blank" rel="noopener" class="circle-icon" title="Instagram Profile">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+    <!-- CATEGORY 2: JOB RECRUITMENT PORTALS -->
+    <h3 style="font-size: 1.1rem; color: #1a8cb6; font-weight: 700; margin: 35px 0 15px 0; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; border-top: 1px solid #e2e8f0; padding-top: 25px;">
+      Job Recruitment Portals
+    </h3>
+
+    <div class="admission-grid">
+
+      <!-- 4. PSC RECRUITMENT -->
+      <div class="admission-card">
+        <div class="admission-col-left">
+          <div class="logo-box">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKqcl8QtRI4RlGXPb4uO3dgIY88ef5P79rjA&s" 
+       alt="PSC Recruitment Logo" 
+       style="max-width: 100%; max-height: 70px; object-fit: contain;" 
+       onerror="this.onerror=null; this.parentNode.innerHTML='<strong style=\'color:#1a8cb6;\'>JobCentre Brunei</strong>';">
+</div>
+          <a href="https://www.recruitment.gov.bn/" target="_blank" rel="noopener" class="btn-click-here">Click Here</a>
+        </div>
+        <div class="admission-col-right">
+          <h3>PSC Recruitment (SPA)</h3>
+          <p class="contact-info"><strong>Tel:</strong> +6732381961 / +6732380453</p>
+          <div class="icon-row">
+            <a href="https://www.recruitment.gov.bn/" target="_blank" rel="noopener" class="circle-icon" title="Official Portal">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+            </a>
+            <a href="mailto:pscrecruitment@spa.gov.bn" class="circle-icon" title="Email Direct">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. JOBCENTRE BRUNEI -->
+      <div class="admission-card">
+        <div class="admission-col-left">
+            <div class="logo-box">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrV29aZ61bFTs_IeQZpsDGWhpc9hXTttdgXA&s" 
+       alt="Pusat Pekerjaan Brunei Logo" 
+       style="max-width: 100%; max-height: 70px; object-fit: contain;" 
+       onerror="this.onerror=null; this.parentNode.innerHTML='<strong style=\'color:#1a8cb6;\'>JobCentre Brunei</strong>';">
+</div>
+          <a href="https://jobcentrebrunei.gov.bn/" target="_blank" rel="noopener" class="btn-click-here">Click Here</a>
+        </div>
+        <div class="admission-col-right">
+          <h3>Pusat Pekerjaan Brunei</h3>
+          <p class="contact-info"><strong>Tel:</strong> +6732444100</p>
+          <p class="contact-info"><strong>Hotline:</strong> +6738310000</p>
+          <div class="icon-row">
+            <a href="https://jobcentrebrunei.gov.bn/" target="_blank" rel="noopener" class="circle-icon" title="Official Portal">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+            </a>
+            <a href="mailto:jobcentrebrunei@mpec.gov.bn" class="circle-icon" title="Email Direct">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- 4B: CONTACT US / SERVICE DESK -->
+<div id="page-contact" class="page-content detail-layout-page">
+  <button class="portal-back-btn" onclick="showPage('home')">← Back to Home Base</button>
+  <div class="portal-container">
+    <div class="info-profile-header">
+      <div class="info-details-container">
+        <h2>CEU Communication Service Desk</h2>
+        <div class="info-meta-item"><strong>Platform:</strong> Career Education Unit Digital Support</div>
+        <div class="info-meta-item"><strong>Availability:</strong> Online Inquiry Submission Gateway</div>
+      </div>
+    </div>
+
+<!-- Dynamic Communication Form -->
+<div class="contact-form-wrapper" style="margin-top: 25px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #eef2f3;">
+  <h3 style="margin-top: 0; margin-bottom: 15px; color: #2c3e50; font-size: 1.2rem;">Submit a Digital Inquiry</h3>
+  
+  <form id="ceuSupportForm" onsubmit="handleFormSubmit(event)" style="display: flex; flex-direction: column; gap: 15px;">
+    
+    <!-- Full Name -->
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <label for="contact-name" style="font-weight: bold; font-size: 0.9rem; color: #34495e;">Full Name</label>
+      <input type="text" id="contact-name" placeholder="Full name" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem;">
+    </div>
+
+    <!-- Email Address -->
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <label for="contact-email" style="font-weight: bold; font-size: 0.9rem; color: #34495e;">Email Address</label>
+      <input type="email" id="contact-email" placeholder="e.g. name@example.com" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem;">
+    </div>
+
+    <!-- Contact Number -->
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <label for="contact-phone" style="font-weight: bold; font-size: 0.9rem; color: #34495e;">Contact Number</label>
+      <input type="tel" id="contact-phone" placeholder="e.g. +673 8123456" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem;">
+    </div>
+    
+    <!-- Inquiry Category -->
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <label for="contact-category" style="font-weight: bold; font-size: 0.9rem; color: #34495e;">Inquiry Category</label>
+      <select id="contact-category" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; background: #fff; height: 40px;">
+        <option value="" disabled selected>Choose an inquiry lane...</option>
+        <option value="Scholarship Pipelines">Scholarship Pipelines</option>
+        <option value="Institutional Criteria & Matrix">Institutional Criteria &amp; Matrix</option>
+        <option value="Portal Access / Authentication Issues">Portal Access / Authentication Issues</option>
+        <option value="General Inquiries">General Inquiries</option>
+      </select>
+    </div>
+    
+    <!-- Detailed Message -->
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <label for="contact-message" style="font-weight: bold; font-size: 0.9rem; color: #34495e;">Detailed Message</label>
+      <textarea id="contact-message" rows="5" placeholder="Provide details regarding your specific inquiry or platform roadblock..." required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; resize: vertical; font-family: inherit;"></textarea>
+    </div>
+    
+    <button type="submit" style="background: #2c3e50; color: white; border: none; padding: 12px; font-size: 1rem; font-weight: bold; border-radius: 4px; cursor: pointer; transition: background 0.2s; align-self: flex-start; min-width: 180px;">
+      Submit Inquiry
+    </button>
+  </form>
+</div>
+</div>
+</div>
+
+</main>
+</div>
+
+<script>
+  /**
+   * 1. LOGIN CONTROLLER
+   * Checks the username and password against your Google Apps Script backend database.
+   */
+  function executeLogin() {
+    const user = document.getElementById('username').value;
+    const pass = document.getElementById('password').value;
+    const errorDiv = document.getElementById('login-error');
+    
+    // Show a loading message
+    errorDiv.innerText = "Authenticating with CEU Database...";
+    errorDiv.style.color = "#1a8cb6";
+
+    // Run the backend Google Apps Script function named 'checkLogin'
+    google.script.run
+      .withSuccessHandler(function(response) {
+        if (response.success) {
+          errorDiv.innerText = ""; // Clear any error messages
+          startPortalAuth();       // Open the dashboard
+        } else {
+          errorDiv.innerText = response.message; // Show invalid credential error
+          errorDiv.style.color = "#d93025";
+        }
+      })
+      .withFailureHandler(function(err) {
+        errorDiv.innerText = "Network/System Error: " + err.message;
+        errorDiv.style.color = "#d93025";
+      })
+      .checkLogin(user, pass); 
+  }
+
+function startPortalAuth() {
+    document.getElementById('login-container').style.display = 'none';
+    document.getElementById('main-app').style.display = 'block';
+    showPage('home'); // Automatically view the homepage first
+}
+
+/**
+ * Loads every iframe[data-src] on the page immediately, instead of waiting
+ * for the user to click into that page.
+ */
+function loadAllSlideIframes() {
+    const allIframes = document.querySelectorAll('iframe[data-src]');
+    allIframes.forEach(iframe => {
+        if (!iframe.src || iframe.src === 'about:blank') {
+            const realSrc = iframe.getAttribute('data-src');
+            if (realSrc) {
+                iframe.src = realSrc;
+            }
+        }
+    });
+}
+
+  function handleLogout() {
+    document.getElementById('main-app').style.display = 'none';
+    document.getElementById('login-container').style.display = 'flex';
+    
+    // Clear input forms so the next user sees a blank screen
+    document.getElementById('password').value = '';
+    document.getElementById('username').value = ''; 
+    document.getElementById('login-error').innerText = '';
+  }
+
+/**
+   * 3. PAGE ROUTER / NAVIGATOR
+   * Switches visibility between different page sections when menu links or buttons are clicked.
+   */
+  function showPage(pageId) {
+    // Hide all pages by removing the 'active' class
+    const modules = document.querySelectorAll('.page-content');
+    modules.forEach(m => m.classList.remove('active'));
+
+    // Tries to find 'page-[id]'. If it fails, checks for 'page-page-[id]' automatically
+    let targetModule = document.getElementById('page-' + pageId);
+    if (!targetModule) {
+      targetModule = document.getElementById('page-page-' + pageId);
+    }
+
+    // If the page section exists, make it visible
+    if (targetModule) {
+      targetModule.classList.add('active');
+
+      // 🚀 ON-DEMAND LOAD: Check if this page has an unloaded iframe and load it now
+      const pendingIframes = targetModule.querySelectorAll('iframe[data-src]');
+      pendingIframes.forEach(iframe => {
+        // Only assign src if it hasn't been loaded yet (prevents re-loading on re-clicks)
+        if (!iframe.src || iframe.src === 'about:blank') {
+          const realSrc = iframe.getAttribute('data-src');
+          if (realSrc) {
+            iframe.src = realSrc;
+          }
+        }
+      });
+    }
+
+    // Reset all top navigation bar highlights
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => link.classList.remove('active'));
+
+    // Highlight active link (target the <a> tag directly)
+    if (pageId === 'home') {
+      const homeLink = document.getElementById('link-home');
+      if (homeLink) homeLink.classList.add('active');
+    } else if (pageId === 'page-pathway' || pageId === 'pathway') {
+      const pathwayLink = document.getElementById('link-pathway');
+      if (pathwayLink) {
+        const activeElem = pathwayLink.tagName === 'A' ? pathwayLink : pathwayLink.querySelector('a');
+        if (activeElem) activeElem.classList.add('active');
+      }
+    } else if (pageId === 'contact') {
+      const contactLink = document.getElementById('link-contact');
+      if (contactLink) {
+        // Fix: Handles whether ID is on <a> or <li>
+        const activeElem = contactLink.tagName === 'A' ? contactLink : contactLink.querySelector('a');
+        if (activeElem) activeElem.classList.add('active');
+      }
+    } else if (pageId === 'admission') {
+      const admissionLink = document.getElementById('link-admission');
+      if (admissionLink) {
+        // Fix: Handles whether ID is on <a> or <li>
+        const activeElem = admissionLink.tagName === 'A' ? admissionLink : admissionLink.querySelector('a');
+        if (activeElem) activeElem.classList.add('active');
+      }
+    }
+
+    // Smoothly scroll back to the top of the browser window
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+/**
+ * 4. DIGITAL SERVICE DESK SUBMISSION
+ */
+function handleFormSubmit(event) {
+  event.preventDefault(); // Stop page refresh
+  
+  const nameElem = document.getElementById('contact-name');
+  const emailElem = document.getElementById('contact-email');
+  const phoneElem = document.getElementById('contact-phone');
+  const categoryElem = document.getElementById('contact-category');
+  const messageElem = document.getElementById('contact-message');
+  const submitBtn = event.target.querySelector('button[type="submit"]');
+
+  if (!nameElem || !emailElem || !phoneElem || !categoryElem || !messageElem) {
+    alert("Form inputs not found. Please check element IDs.");
+    return;
+  }
+
+  const name = nameElem.value;
+  const email = emailElem.value;
+  const phone = phoneElem.value;
+  const category = categoryElem.value;
+  const message = messageElem.value;
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Submitting...";
+  }
+
+  // Pass all 5 parameters to saveInquiry in Code.gs
+  google.script.run
+    .withSuccessHandler(function(response) {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Submit Inquiry";
+      }
+
+      if (response.success) {
+        alert("Inquiry successfully dispatched to the CEU Support Pipeline!");
+        event.target.reset(); // Clear form
+      } else {
+        alert("Submission Error: " + response.message);
+      }
+    })
+    .withFailureHandler(function(err) {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Submit Inquiry";
+      }
+      alert("Network/System Error: " + err.message);
+    })
+    .saveInquiry(name, email, phone, category, message);
+}
+
+  /**
+   * 5. AUTOMATED LIVE SYNC TIMESTAMP
+   */
+  document.addEventListener("DOMContentLoaded", function() {
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(function(dateString) {
+          const updateText = document.getElementById("system-update-date");
+          if (updateText) {
+            updateText.innerText = "Info updated as of: " + dateString;
+          }
+        })
+        .withFailureHandler(function(err) {
+          const updateText = document.getElementById("system-update-date");
+          if (updateText) {
+            updateText.innerText = "Sync Error: " + err.message;
+          }
+        })
+        .getScriptEditTime();
+    }
+  });
+</script>
+</body>
+</html>
