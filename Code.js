@@ -3,9 +3,15 @@
  * Serves the primary user interface (Index.html) when someone opens the web app link.
  */
 function doGet() {
-  return HtmlService.createHtmlOutputFromFile('Index')
-      .setTitle('Career Education Unit Portal')
-      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  try {
+    return HtmlService.createHtmlOutputFromFile('index')
+        .setTitle('Career Education Unit Portal')
+        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  } catch (e) {
+    return HtmlService.createHtmlOutputFromFile('Index')
+        .setTitle('Career Education Unit Portal')
+        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  }
 }
 
 /**
