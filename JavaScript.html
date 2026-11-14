@@ -1,0 +1,1108 @@
+<script>
+  /**
+   * 1. OTP LOGIN CONTROLLER
+   * Step 1: user enters school email -> backend emails a 6-digit code.
+   * Step 2: user enters the code -> backend returns a session token.
+   */
+  let sessionToken = null;
+  let currentUserRole = null;
+  let sessionTimeoutId = null; // Tracks the auto-logout timer
+  const SESSION_LENGTH_MS = 60 * 60 * 1000; // 1 hour, matches backend session length
+  let otpStep = 'email';
+
+  function setLoginMsg_(text, ok) {
+    var el = document.getElementById('login-error');
+    if (!el) return;
+    el.innerText = text;
+    el.style.color = ok ? '#ffffff' : '#ffd9c4';
+  }
+
+  function handleLoginSubmit() {
+    if (otpStep === 'email') sendOtp(); else verifyOtp();
+  }
+
+  function sendOtp() {
+    var emailEl = document.getElementById('username');
+    var email = emailEl.value.trim().toLowerCase();
+    var btn = document.getElementById('login-btn');
+    if (!email) { setLoginMsg_('Please enter your school email.', false); return; }
+
+    btn.disabled = true;
+    setLoginMsg_('Sending code...', true);
+
+    google.script.run
+      .withSuccessHandler(function(res) {
+        btn.disabled = false;
+        if (!res.success) { setLoginMsg_(res.message, false); return; }
+
+        // Remember email (optional)
+        try {
+          if (document.getElementById('remember-email').checked) localStorage.setItem('ceu_email', email);
+          else localStorage.removeItem('ceu_email');
+        } catch (e) { /* storage may be blocked in the iframe */ }
+
+        otpStep = 'code';
+        emailEl.readOnly = true;
+        document.getElementById('otp-code').style.display = 'block';
+        document.getElementById('otp-code').focus();
+        document.getElementById('otp-hint').style.display = 'block';
+        document.getElementById('remember-row').style.display = 'none';
+        document.getElementById('otp-back').style.display = 'inline';
+        document.getElementById('otp-resend').style.display = 'inline';
+        btn.innerText = 'Verify & Sign In';
+        setLoginMsg_(res.message, true);
+      })
+      .withFailureHandler(function(err) {
+        btn.disabled = false;
+        setLoginMsg_('Network/System Error: ' + err.message, false);
+      })
+      .requestLoginOtp(email);
+  }
+
+  function verifyOtp() {
+    var email = document.getElementById('username').value.trim().toLowerCase();
+    var code = document.getElementById('otp-code').value.trim();
+    var btn = document.getElementById('login-btn');
+    if (code.length !== 6) { setLoginMsg_('Please enter the 6-digit code.', false); return; }
+
+    btn.disabled = true;
+    setLoginMsg_('Verifying...', true);
+
+    google.script.run
+      .withSuccessHandler(function(res) {
+        btn.disabled = false;
+        if (!res.success) { setLoginMsg_(res.message, false); return; }
+        setLoginMsg_('', true);
+        sessionToken = res.token;
+        currentUserRole = res.role;
+        resetOtpStep();
+        startPortalAuth();
+      })
+      .withFailureHandler(function(err) {
+        btn.disabled = false;
+        setLoginMsg_('Network/System Error: ' + err.message, false);
+      })
+      .verifyLoginOtp(email, code);
+  }
+
+  function resetOtpStep() {
+    otpStep = 'email';
+    var emailEl = document.getElementById('username');
+    if (emailEl) emailEl.readOnly = false;
+    var ids = { 'otp-code': 'none', 'otp-hint': 'none', 'otp-back': 'none', 'otp-resend': 'none' };
+    Object.keys(ids).forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.style.display = ids[id];
+    });
+    var code = document.getElementById('otp-code');
+    if (code) code.value = '';
+    var rem = document.getElementById('remember-row');
+    if (rem) rem.style.display = 'flex';
+    var btn = document.getElementById('login-btn');
+    if (btn) { btn.innerText = 'Send Verification Code'; btn.disabled = false; }
+  }
+
+  // Pre-fill remembered email on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    try {
+      var saved = localStorage.getItem('ceu_email');
+      if (saved) {
+        document.getElementById('username').value = saved;
+        document.getElementById('remember-email').checked = true;
+      }
+    } catch (e) { /* ignore */ }
+  });
+
+  /**
+   * ROLE HELPERS
+   * Must match DASHBOARD_ROLES_ / USER_MANAGER_ROLES_ in Code.gs. (The server is the real
+   * gatekeeper; these only decide what to show in the browser.)
+   */
+  function roleLower_() {
+    return (currentUserRole || '').toString().trim().toLowerCase();
+  }
+  function isAdminRole() { return roleLower_() === 'admin'; }
+  function isOfficerRole() { return roleLower_() === 'officer'; }
+  function canSeeDashboard() { return isOfficerRole() || isAdminRole(); }
+  function canManageUsers() { return isOfficerRole() || isAdminRole(); }
+
+  /**
+   * 2. PORTAL GATES
+   */
+  function startPortalAuth() {
+    document.getElementById('login-container').style.display = 'none';
+    document.getElementById('main-app').style.display = 'block';
+
+    var dashPill = document.getElementById('admin-dashboard-nav-pill');
+    if (dashPill) dashPill.style.display = canSeeDashboard() ? 'inline-flex' : 'none';
+    var usersPill = document.getElementById('admin-users-nav-pill');
+    if (usersPill) usersPill.style.display = canManageUsers() ? 'inline-flex' : 'none';
+
+    showPage('home');
+
+    // Auto-logout once the session expires, so users aren't left on a dead session
+    if (sessionTimeoutId) clearTimeout(sessionTimeoutId);
+    sessionTimeoutId = setTimeout(function() {
+      alert("Your session has expired after 1 hour. Please log in again.");
+      handleLogout();
+    }, SESSION_LENGTH_MS);
+
+    // Bump the site-wide visit counter shown in the footer
+    google.script.run
+      .withSuccessHandler(function(count) {
+        const counterElem = document.getElementById('footer-visit-count');
+        if (counterElem) counterElem.innerText = count;
+      })
+      .withFailureHandler(function(err) {
+        const counterElem = document.getElementById('footer-visit-count');
+        if (counterElem) counterElem.innerText = '—';
+      })
+      .incrementSiteVisitCount();
+  }
+
+  function handleLogout() {
+    sessionToken = null;
+    currentUserRole = null;
+    if (sessionTimeoutId) {
+      clearTimeout(sessionTimeoutId);
+      sessionTimeoutId = null;
+    }
+    document.getElementById('main-app').style.display = 'none';
+    document.getElementById('login-container').style.display = 'flex';
+
+    // Reset the OTP form so the next user starts fresh
+    resetOtpStep();
+    document.getElementById('login-error').innerText = '';
+    try {
+      if (!localStorage.getItem('ceu_email')) document.getElementById('username').value = '';
+    } catch (e) {
+      document.getElementById('username').value = '';
+    }
+  }
+
+  /**
+   * 3. PAGE ROUTER / NAVIGATOR
+   */
+  function requestSlideFullscreen(btn) {
+    const wrapper = btn.closest('.slides-wrapper');
+    if (!wrapper) return;
+
+    // Fullscreen the WRAPPER, not the iframe, so the top-bar shield stays layered on top.
+    if (wrapper.requestFullscreen) wrapper.requestFullscreen();
+    else if (wrapper.webkitRequestFullscreen) wrapper.webkitRequestFullscreen();
+    else if (wrapper.mozRequestFullScreen) wrapper.mozRequestFullScreen();
+    else if (wrapper.msRequestFullscreen) wrapper.msRequestFullscreen();
+  }
+
+  function showPage(pageId) {
+    // Browser-side guard (the server checks again on every request)
+    if (pageId === 'dashboard' && !canSeeDashboard()) return;
+    if (pageId === 'users' && !canManageUsers()) return;
+
+    const modules = document.querySelectorAll('.page-content');
+    modules.forEach(m => m.classList.remove('active'));
+
+    let targetModule = document.getElementById('page-' + pageId);
+    if (!targetModule) {
+      targetModule = document.getElementById('page-page-' + pageId);
+    }
+
+    if (targetModule) {
+      targetModule.classList.add('active');
+
+      // ON-DEMAND LOAD: load iframes only when their page is opened
+      const pendingIframes = targetModule.querySelectorAll('iframe[data-src]');
+      pendingIframes.forEach(iframe => {
+        if (!iframe.src || iframe.src === 'about:blank') {
+          const realSrc = iframe.getAttribute('data-src');
+          if (realSrc) {
+            iframe.src = realSrc;
+          }
+        }
+      });
+    }
+
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => link.classList.remove('active'));
+
+    if (pageId === 'home') {
+      const homeLink = document.getElementById('link-home');
+      if (homeLink) homeLink.classList.add('active');
+    } else if (pageId === 'admission') {
+      const admissionLink = document.getElementById('link-admission');
+      if (admissionLink) {
+        const activeElem = admissionLink.tagName === 'A' ? admissionLink : admissionLink.querySelector('a');
+        if (activeElem) activeElem.classList.add('active');
+      }
+    }
+
+    document.querySelectorAll('[data-hub-page]').forEach(function(el) { el.classList.remove('active'); });
+    document.querySelectorAll('[data-hub-page="' + pageId + '"]').forEach(function(el) { el.classList.add('active'); });
+
+    const heroBanner = document.getElementById('portal-hero-banner');
+    if (heroBanner) heroBanner.classList.toggle('hero-compact', pageId !== 'home');
+    document.querySelector('main').classList.toggle('home-tight', pageId === 'home');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Analytics logging (not for home / admin pages)
+    if (sessionToken && pageId !== 'home' && pageId !== 'dashboard' && pageId !== 'users') {
+      google.script.run
+        .withFailureHandler(function(err) { /* logging is best-effort */ })
+        .logPageView(sessionToken, pageId);
+    }
+
+    if (pageId === 'dashboard') loadOfficerDashboard();
+    if (pageId === 'users') loadAdminPage();
+
+    // Aptitude tests trigger
+    if ((pageId === 'aptitude-tests' || pageId === 'page-aptitude-tests') && typeof window.renderAptitudeTests === 'function') {
+      window.renderAptitudeTests();
+    }
+  }
+
+  /**
+   * 4. AUTOMATED LIVE SYNC TIMESTAMP
+   */
+  document.addEventListener("DOMContentLoaded", function() {
+    google.script.run
+      .withSuccessHandler(function(dateString) {
+        const updateText = document.getElementById("system-update-date");
+        if (updateText) {
+          updateText.innerText = "Last updated: " + dateString;
+        }
+      })
+      .withFailureHandler(function(err) {
+        const updateText = document.getElementById("system-update-date");
+        if (updateText) {
+          updateText.innerText = "Sync Error: " + err.message;
+        }
+      })
+      .getScriptEditTime();
+  });
+
+  /**
+   * 5. LOADING OVERLAY
+   */
+  function hidePageLoadingOverlay() {
+    const overlay = document.getElementById('page-loading-overlay');
+    if (overlay) overlay.style.display = 'none';
+  }
+  document.addEventListener('DOMContentLoaded', hidePageLoadingOverlay);
+  setTimeout(hidePageLoadingOverlay, 4000); // failsafe
+
+  /**
+   * 6. HOMEPAGE SCROLL-REVEAL
+   */
+  document.addEventListener('DOMContentLoaded', function() {
+    const homeStrips = document.querySelectorAll('#page-home .home-section-strip');
+    if (!homeStrips.length) return;
+
+    homeStrips.forEach(function(strip) { strip.classList.add('reveal-on-scroll'); });
+
+    if (!('IntersectionObserver' in window)) {
+      homeStrips.forEach(function(strip) { strip.classList.add('revealed'); });
+      return;
+    }
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    homeStrips.forEach(function(strip) { observer.observe(strip); });
+  });
+
+  /**
+   * 7. SLIDE VIEWER HEADERS
+   */
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.slides-wrapper').forEach(function(w) {
+      if (w.parentElement.classList.contains('pdf-section')) return;
+      var sec = document.createElement('div');
+      sec.className = 'pdf-section';
+      var head = document.createElement('div');
+      head.className = 'pdf-header';
+      head.innerHTML = '<h2>' + (w.getAttribute('data-title') || 'Overview') +
+                       '</h2><span class="hint">View slides below · Viewing only</span>';
+      w.parentNode.insertBefore(sec, w);
+      sec.appendChild(head);
+      sec.appendChild(w);
+    });
+  });
+
+  /**
+   * 8. SHARED HELPERS + PAGE LABELS (used by search and the dashboard)
+   */
+  function escapeHtml_(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  var PAGE_LABELS = {
+    'home': 'Home Page',
+    'admission': 'Application Portals & Aptitude Tests',
+    'resources': 'Career Resources',
+    'dashboard': 'Dashboard',
+    'users': 'User Management',
+
+    'hub-institutions': 'Education Pathways — Main Page',
+    'hub-scholarships': 'Scholarships — Main Page',
+    'hub-uniformed': 'Uniformed Groups — Main Page',
+    'hub-gov': 'Government Sector — Main Page',
+    'hub-corporate': 'Private Sectors — Main Page',
+
+    'page-pathway': 'BTEC Pathway',
+    'inst-filter': 'Technical Institutions Filtering',
+    'inst-sixth-form': 'Sixth Form Centres',
+    'inst-universities': 'Local Universities',
+    'inst-technical': 'Technical, Vocational & Skills Training Institutes',
+    'inst-private': 'Private Institutions',
+    'inst-training': 'Education Provider',
+
+    'ubd-detail': 'Universiti Brunei Darussalam',
+    'utb-detail': 'Universiti Teknologi Brunei',
+    'unissa-detail': 'Universiti Islam Sultan Sharif Ali',
+    'kupusb-detail': 'Kolej Universiti Perguruan Ugama Seri Begawan',
+
+    'ibte-detail': 'Institut Pendidikan Teknikal Brunei (IBTE)',
+    'pb-detail': 'Politeknik Brunei (PB)',
+    'ppb-detail': 'Pusat Pembangunan Belia (PPB)',
+    'kesenian-detail': 'Pusat Latihan Kesenian & Pertukangan Tangan Brunei',
+    'l3c-detail': 'Pusat Pembelajaran Sepanjang Hayat (L3C)',
+
+    'lcb-detail': 'Laksamana College of Business',
+    'kigs-detail': 'Kolej International Graduate Studies',
+    'ccct-detail': 'Cosmopolitan College of Commerce and Technology',
+    'jpmc-detail': 'JPMC College of Health Sciences',
+    'micronet-detail': 'Micronet International College',
+    'kemuda-detail': 'Kemuda Institute',
+    'hadtech-detail': 'HADtech College',
+    'bicpa-detail': 'BICPA Academy',
+    'uniklearn-detail': 'Uniklearn (An-Nur Harapan)',
+
+    'findlay-detail': 'Findlay Education Services',
+    'hrds-detail': 'HRD Services (HRDS)',
+
+    'sub-menu-gov': 'Government Scholarship',
+    'sub-menu-foreign': 'Scholarships Abroad',
+    'moe-gov-detail': 'Ministry of Education Scholarship',
+    'sultan-gov-detail': "Sultan's Scholar Scheme",
+    'mindef-gov-detail': 'Supreme Commander MINDEF Scholarship',
+    'bdgs-gov-detail': 'Brunei Darussalam Government Scholarship (BDGS)',
+    'india-foreign-detail': 'High Commission of India',
+    'japan-foreign-detail': 'Embassy of Japan',
+    'korea-foreign-detail': 'Embassy of the Republic of Korea',
+    'usa-foreign-detail': 'U.S. Embassy',
+    'turkiye-foreign-detail': 'Embassy of the Republic of Turkiye',
+
+    'page-rbaf': 'Royal Brunei Armed Forces',
+    'page-rbpf': 'Royal Brunei Police Force',
+    'page-bomba': 'Fire and Rescue Department',
+    'page-penjara': 'Prisons Department',
+
+    'page-moh': 'Ministry of Health',
+    'page-met': 'Meteorological Department',
+    'page-rtb': 'Radio Televisyen Brunei',
+    'page-tourism': 'Tourism Development Department',
+    'page-rba': 'Royal Brunei Airlines',
+    'page-bdnac': 'Brunei Darussalam National Accreditation Council, MOE',
+    'page-hed': 'Department of Higher Education, MOE',
+    'page-jpp': 'Department of Educators Management, MOE',
+
+    'page-corp-dst': 'Datastream Digital (DST)',
+    'page-corp-hibiscus': 'Hibiscus EP (Brunei) B.V.',
+    'page-corp-aegis': 'AEGIS Secure Solutions'
+  };
+
+  function pageLabel_(pageId) {
+    return PAGE_LABELS[pageId] || pageId;
+  }
+
+  /* ============================================================
+     9. DASHBOARD + USER MANAGEMENT
+     ============================================================ */
+  var dxCharts = {}, dxSchools = [], dxDormant = [], dxUsers = [], dxUsersView = [], dxRequests = [];
+  var dxEditing = null;   // username being edited, or null when adding
+
+  /* ---------- generic helpers ---------- */
+  function dxTab(group, paneId, btn) {
+    document.querySelectorAll('.dx-tab[data-g="' + group + '"]').forEach(function (t) { t.classList.remove('active'); });
+    document.querySelectorAll('.dx-pane[data-g="' + group + '"]').forEach(function (p) { p.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+    var pane = document.getElementById(paneId);
+    if (pane) pane.classList.add('active');
+    Object.keys(dxCharts).forEach(function (k) { try { dxCharts[k].resize(); } catch (e) {} });
+  }
+
+  function dxChart_(id, cfg) {
+    var c = document.getElementById(id);
+    if (!c || typeof Chart === 'undefined') return;
+    if (dxCharts[id]) dxCharts[id].destroy();
+    dxCharts[id] = new Chart(c.getContext('2d'), cfg);
+  }
+
+  function dxBar_(id, labels, data) {
+    dxChart_(id, {
+      type: 'bar',
+      data: { labels: labels, datasets: [{ data: data, backgroundColor: '#0ABAB5', borderRadius: 4, maxBarThickness: 24 }] },
+      options: {
+        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { x: { beginAtZero: true, ticks: { precision: 0, color: '#3F6E68' }, grid: { color: '#CDE8E5' } },
+                  y: { ticks: { color: '#0d3a37', font: { size: 11 } }, grid: { display: false } } }
+      }
+    });
+  }
+
+  function dxCsv_(filename, header, rows) {
+    var lines = [header.join(',')];
+    rows.forEach(function (r) {
+      lines.push(r.map(function (v) {
+        var s = String(v == null ? '' : v).replace(/"/g, '""');
+        return /[",\n]/.test(s) ? '"' + s + '"' : s;
+      }).join(','));
+    });
+    var blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function dxSet_(id, val) { var el = document.getElementById(id); if (el) el.innerText = val; }
+  function dxMsg_(id, text, ok) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.className = 'dx-msg ' + (text ? (ok ? 'ok' : 'err') : '');
+    el.innerText = text || '';
+  }
+  function dxStatusBadge_(s) {
+    var cls = s === 'Active' ? 'dx-b-ok' : (s === 'Low Activity' ? 'dx-b-warn' : 'dx-b-none');
+    return '<span class="dx-badge ' + cls + '">' + escapeHtml_(s) + '</span>';
+  }
+
+  /* ---------- dashboard ---------- */
+  function loadOfficerDashboard(force) {
+    if (!sessionToken || !canSeeDashboard()) return;
+    dxSet_('dx-updated', 'Loading…');
+
+    google.script.run
+      .withSuccessHandler(renderOfficerDashboard)
+      .withFailureHandler(function (err) { dxSet_('dx-updated', 'Could not load: ' + err.message); })
+      .getDashboardStats(sessionToken, !!force);
+
+    google.script.run
+      .withSuccessHandler(renderPageViews)
+      .withFailureHandler(function () { dxSet_('dx-views-note', 'Could not load page views.'); })
+      .getPageViewStats(sessionToken);
+  }
+
+  function renderOfficerDashboard(s) {
+    dxSet_('dx-updated', 'Data as of ' + s.generatedAt + ' · Site updated ' + s.lastUpdated);
+    dxSet_('dx-k-users', s.totalUsers);
+    dxSet_('dx-k-a7', s.active7);
+    dxSet_('dx-k-a30', s.active30);
+    dxSet_('dx-k-never', s.neverLoggedIn);
+    dxSet_('dx-k-schools', s.participatingSchools);
+    dxSet_('dx-k-outreach', s.needsOutreachCount);
+    dxSet_('dx-k-visits', s.totalVisits);
+    dxSet_('dx-l-today', s.loginsToday);
+    dxSet_('dx-l-week', s.loginsThisWeek);
+    dxSet_('dx-l-month', s.loginsThisMonth);
+
+    dxChart_('dx-c-trend', {
+      type: 'line',
+      data: {
+        labels: s.loginTrend.map(function (p) { var d = new Date(p.date + 'T00:00:00'); return (d.getMonth() + 1) + '/' + d.getDate(); }),
+        datasets: [{ data: s.loginTrend.map(function (p) { return p.count; }), borderColor: '#078C86', backgroundColor: 'rgba(10,186,181,.18)', fill: true, tension: .35, pointRadius: 2, borderWidth: 2 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: '#3F6E68', font: { size: 10 } }, grid: { color: '#E9FBF8' } },
+                  y: { beginAtZero: true, ticks: { precision: 0, color: '#3F6E68', font: { size: 10 } }, grid: { color: '#E9FBF8' } } } }
+    });
+
+    var top = s.schoolActivity.filter(function (x) { return x.logins > 0; }).slice(0, 6);
+    dxBar_('dx-c-schools', top.map(function (x) { return x.school; }), top.map(function (x) { return x.logins; }));
+
+    var roles = Object.keys(s.roleBreakdown);
+    dxChart_('dx-c-roles', {
+      type: 'doughnut',
+      data: { labels: roles, datasets: [{ data: roles.map(function (k) { return s.roleBreakdown[k]; }), backgroundColor: ['#0d3a37', '#0ABAB5', '#3F6E68', '#078C86', '#9fd9d4', '#14ADA0'], borderWidth: 0 }] },
+      options: { responsive: true, maintainAspectRatio: false, cutout: '62%', plugins: { legend: { position: 'right', labels: { color: '#0d3a37', font: { size: 11 } } } } }
+    });
+
+    dxSchools = s.schoolActivity || [];
+    renderSchoolsTable();
+
+    dxDormant = s.dormantList || [];
+    renderDormantTable();
+    var badge = document.getElementById('dx-followup-count');
+    if (badge) { badge.innerText = dxDormant.length; badge.style.display = dxDormant.length ? 'inline-block' : 'none'; }
+  }
+
+  function renderSchoolsTable() {
+    var box = document.getElementById('dx-schools-table');
+    if (!box) return;
+    var q = (document.getElementById('dx-school-q').value || '').trim().toLowerCase();
+    var st = document.getElementById('dx-school-status').value;
+    var rows = dxSchools.filter(function (s) {
+      return (!q || s.school.toLowerCase().indexOf(q) !== -1) && (st === 'all' || s.status === st);
+    });
+    if (!rows.length) { box.innerHTML = '<div class="dx-empty">No schools match.</div>'; return; }
+
+    var max = 1; rows.forEach(function (s) { if (s.logins > max) max = s.logins; });
+    box.innerHTML = '<table class="dx-table"><thead><tr><th>School</th><th>Users</th><th>Logins (30d)</th><th>Last active</th><th>Status</th></tr></thead><tbody>' +
+      rows.map(function (s) {
+        var pct = Math.max(Math.round(s.logins / max * 100), s.logins ? 6 : 0);
+        return '<tr><td><b>' + escapeHtml_(s.school) + '</b></td><td>' + s.teacherCount + '</td>' +
+          '<td><div class="dx-bar"><i><u style="width:' + pct + '%"></u></i>' + s.logins + '</div></td>' +
+          '<td>' + escapeHtml_(s.lastActive) + '</td><td>' + dxStatusBadge_(s.status) + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  }
+
+  function exportSchoolsCsv() {
+    dxCsv_('school-activity.csv', ['School', 'Users', 'Logins (30d)', 'Last active', 'Status'],
+      dxSchools.map(function (s) { return [s.school, s.teacherCount, s.logins, s.lastActive, s.status]; }));
+  }
+
+  /* ---------- top content: main pages vs individual pages ---------- */
+  var MAIN_PAGE_IDS = ['admission', 'resources', 'inst-filter', 'inst-sixth-form',
+                       'inst-universities', 'inst-technical', 'inst-private', 'inst-training'];
+
+  function isMainPage_(id) {
+    return /^hub-/.test(id) || /^sub-menu-/.test(id) || MAIN_PAGE_IDS.indexOf(id) !== -1;
+  }
+
+  function dxViewsTable_(boxId, items, emptyMsg) {
+    var box = document.getElementById(boxId);
+    if (!box) return;
+    if (!items.length) { box.innerHTML = '<div class="dx-empty">' + emptyMsg + '</div>'; return; }
+    var max = items[0].count || 1;
+    box.innerHTML = '<table class="dx-table"><thead><tr><th>#</th><th>Page</th><th>Trend</th><th>Views</th></tr></thead><tbody>' +
+      items.slice(0, 15).map(function (it, i) {
+        return '<tr><td><span class="dx-rank">' + (i + 1) + '</span></td><td><b>' + escapeHtml_(it.label) + '</b></td>' +
+          '<td><div class="dx-bar"><i><u style="width:' + Math.max(Math.round(it.count / max * 100), 6) + '%"></u></i></div></td><td>' + it.count + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  }
+
+  function renderPageViews(res) {
+    dxSet_('dx-views-note', 'Total tracked views: ' + res.totalViews);
+    var all = res.topPages.map(function (p) { return { id: p.pageId, label: pageLabel_(p.pageId), count: p.count }; });
+    var main = all.filter(function (x) { return isMainPage_(x.id); });
+    var detail = all.filter(function (x) { return !isMainPage_(x.id); });
+
+    dxViewsTable_('dx-pages-main-table', main, 'No main-page views recorded yet.');
+    dxViewsTable_('dx-pages-detail-table', detail, 'No individual-page views recorded yet.');
+
+    var top = all.slice(0, 6);
+    if (top.length) dxBar_('dx-c-pages', top.map(function (i) { return i.label; }), top.map(function (i) { return i.count; }));
+  }
+
+  function renderDormantTable() {
+    var box = document.getElementById('dx-dormant-table');
+    if (!dxDormant.length) { box.innerHTML = '<div class="dx-empty">Everyone has logged in recently. 🎉</div>'; return; }
+    box.innerHTML = '<table class="dx-table"><thead><tr><th>User</th><th>Role</th><th>School</th><th>Last login</th></tr></thead><tbody>' +
+      dxDormant.map(function (u) {
+        return '<tr><td><b>' + escapeHtml_(u.name || u.username) + '</b>' + (u.name ? '<br><small style="color:var(--jss-muted)">' + escapeHtml_(u.username) + '</small>' : '') + '</td>' +
+          '<td><span class="dx-badge dx-b-role">' + escapeHtml_(u.role) + '</span></td><td>' + escapeHtml_(u.school) + '</td>' +
+          '<td>' + (u.lastLogin === 'Never' ? '<span class="dx-badge dx-b-bad">Never</span>' : escapeHtml_(u.lastLogin)) + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  }
+
+  function exportDormantCsv() {
+    dxCsv_('follow-up-users.csv', ['Name', 'Email', 'Role', 'School', 'Last login'],
+      dxDormant.map(function (u) { return [u.name, u.username, u.role, u.school, u.lastLogin]; }));
+  }
+
+  /* ---------- user management (Officer + Admin) ---------- */
+  function loadAdminPage() {
+    if (!sessionToken || !canManageUsers()) return;
+
+    // Officers can't see the System tab or assign the Admin role
+    var sysTab = document.getElementById('dx-system-tab');
+    if (sysTab) sysTab.style.display = isAdminRole() ? '' : 'none';
+    var roleSel = document.getElementById('dx-m-role');
+    if (roleSel) {
+      Array.prototype.forEach.call(roleSel.options, function (o) {
+        if (o.value === 'Admin') { o.disabled = !isAdminRole(); o.hidden = !isAdminRole(); }
+      });
+    }
+
+    loadUsers();
+    loadRequests();
+  }
+
+  function loadUsers() {
+    document.getElementById('dx-users-table').innerHTML = '<div class="dx-empty">Loading users…</div>';
+    google.script.run
+      .withSuccessHandler(function (users) { dxUsers = users; renderUsersTable(); })
+      .withFailureHandler(function (err) { document.getElementById('dx-users-table').innerHTML = '<div class="dx-empty">Could not load users: ' + escapeHtml_(err.message) + '</div>'; })
+      .getUserManagementData(sessionToken);
+  }
+
+  var DX_AVATARS = ['#078C86', '#c1440c', '#3f6e68', '#5b7fd6', '#a15bd6', '#d6a15b'];
+  function dxInitials_(s) {
+    var p = (s || '').trim().split(/[\s._@-]+/).filter(Boolean);
+    return !p.length ? '?' : (p.length === 1 ? p[0].slice(0, 2) : p[0][0] + p[1][0]).toUpperCase();
+  }
+  function dxColor_(s) { var n = 0; for (var i = 0; i < (s || '').length; i++) n += s.charCodeAt(i); return DX_AVATARS[n % DX_AVATARS.length]; }
+
+  function renderUsersTable() {
+    var q = (document.getElementById('dx-user-q').value || '').toLowerCase().trim();
+    var rf = document.getElementById('dx-user-role').value;
+    dxUsersView = dxUsers.filter(function (u) {
+      var hay = (u.username + ' ' + u.name + ' ' + u.school + ' ' + u.role).toLowerCase();
+      return (!q || hay.indexOf(q) !== -1) && (rf === 'all' || u.role === rf);
+    });
+    var box = document.getElementById('dx-users-table');
+    if (!dxUsersView.length) { box.innerHTML = '<div class="dx-empty">No users found.</div>'; return; }
+
+    box.innerHTML = '<table class="dx-table"><thead><tr><th>User</th><th>Role</th><th>School</th><th>Last login</th><th>Actions</th></tr></thead><tbody>' +
+      dxUsersView.map(function (u, i) {
+        var label = u.name || u.username;
+        var locked = (u.role === 'Admin' && !isAdminRole());   // officers can't touch Admin accounts
+        var actions = locked
+          ? '<small style="color:var(--jss-muted)">Admin only</small>'
+          : '<div class="dx-actions"><button class="dx-btn sm" onclick="openUserModal(' + i + ')">Edit</button>' +
+            '<button class="dx-btn sm danger" onclick="deleteUser(' + i + ')">Delete</button></div>';
+        return '<tr><td><div class="dx-user"><div class="dx-avatar" style="background:' + dxColor_(label) + '">' + dxInitials_(label) + '</div>' +
+          '<div><b>' + escapeHtml_(label) + '</b>' + (u.name ? '<small>' + escapeHtml_(u.username) + '</small>' : '') + '</div></div></td>' +
+          '<td><span class="dx-badge ' + (u.role === 'Admin' ? 'dx-b-admin' : 'dx-b-role') + '">' + escapeHtml_(u.role) + '</span></td>' +
+          '<td>' + escapeHtml_(u.school) + '</td><td>' + escapeHtml_(u.lastLogin) + '</td>' +
+          '<td>' + actions + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  }
+
+  function openUserModal(i) {
+    var u = i >= 0 ? dxUsersView[i] : null;
+    dxEditing = u ? u.username : null;
+    document.getElementById('dx-modal-title').innerText = u ? 'Edit user' : 'Add user';
+    var email = document.getElementById('dx-m-email');
+    email.value = u ? u.username : '';
+    email.readOnly = !!u;
+    document.getElementById('dx-m-name').value = u ? u.name : '';
+    document.getElementById('dx-m-role').value = u ? u.role : 'Principal';
+    document.getElementById('dx-m-school').value = u ? u.school : '';
+    dxMsg_('dx-m-msg', '');
+    document.getElementById('dx-m-save').disabled = false;
+    document.getElementById('dx-modal-bg').classList.add('open');
+  }
+  function closeUserModal() { document.getElementById('dx-modal-bg').classList.remove('open'); }
+
+  function saveUser() {
+    var email = document.getElementById('dx-m-email').value.trim().toLowerCase();
+    var name = document.getElementById('dx-m-name').value.trim();
+    var role = document.getElementById('dx-m-role').value;
+    var school = document.getElementById('dx-m-school').value.trim();
+    if (!email) { dxMsg_('dx-m-msg', 'A school email is required.', false); return; }
+
+    var btn = document.getElementById('dx-m-save');
+    btn.disabled = true;
+    dxMsg_('dx-m-msg', 'Saving…', true);
+
+    var done = function (res) {
+      closeUserModal();
+      dxMsg_('dx-users-msg', res.message, true);
+      loadUsers();
+    };
+    var fail = function (err) { btn.disabled = false; dxMsg_('dx-m-msg', err.message, false); };
+
+    var run = google.script.run.withSuccessHandler(done).withFailureHandler(fail);
+    if (dxEditing) run.adminUpdateUser(sessionToken, dxEditing, name, role, school);
+    else run.adminAddUser(sessionToken, email, role, school, name);
+  }
+
+  function deleteUser(i) {
+    var u = dxUsersView[i];
+    if (!u || !confirm('Delete ' + u.username + '? This permanently removes their account.')) return;
+    google.script.run
+      .withSuccessHandler(function (res) { dxMsg_('dx-users-msg', res.message, true); loadUsers(); })
+      .withFailureHandler(function (err) { dxMsg_('dx-users-msg', err.message, false); })
+      .adminDeleteUser(sessionToken, u.username);
+  }
+
+  /* ---------- access requests ---------- */
+  function loadRequests() {
+    document.getElementById('dx-requests-table').innerHTML = '<div class="dx-empty">Loading requests…</div>';
+    google.script.run
+      .withSuccessHandler(function (rows) {
+        dxRequests = rows;
+        var pending = rows.filter(function (r) { return r.status === 'New'; }).length;
+        var b = document.getElementById('dx-req-count');
+        b.innerText = pending; b.style.display = pending ? 'inline-block' : 'none';
+        renderRequestsTable();
+      })
+      .withFailureHandler(function (err) { document.getElementById('dx-requests-table').innerHTML = '<div class="dx-empty">Could not load requests: ' + escapeHtml_(err.message) + '</div>'; })
+      .getAccessRequests(sessionToken);
+  }
+
+  function renderRequestsTable() {
+    var f = document.getElementById('dx-req-status').value;
+    var rows = dxRequests.filter(function (r) { return f === 'all' || r.status === f; });
+    var box = document.getElementById('dx-requests-table');
+    if (!rows.length) { box.innerHTML = '<div class="dx-empty">No requests here.</div>'; return; }
+
+    box.innerHTML = '<table class="dx-table"><thead><tr><th>Requested</th><th>Person</th><th>Role / School</th><th>Contact</th><th>Status</th><th>Actions</th></tr></thead><tbody>' +
+      rows.map(function (r) {
+        var cls = r.status === 'Approved' || r.status === 'Resolved' ? 'dx-b-ok' : (r.status === 'Rejected' ? 'dx-b-bad' : 'dx-b-warn');
+        var actions = r.status === 'New'
+          ? '<div class="dx-actions"><button class="dx-btn sm primary" onclick="reviewRequest(' + r.row + ',\'approve\')">' + (r.type === 'Registration Request' ? 'Approve &amp; add' : 'Resolve') + '</button>' +
+            '<button class="dx-btn sm danger" onclick="reviewRequest(' + r.row + ',\'reject\')">Reject</button></div>'
+          : '';
+        return '<tr><td>' + escapeHtml_(r.time) + '<br><small style="color:var(--jss-muted)">' + escapeHtml_(r.type) + '</small></td>' +
+          '<td><b>' + escapeHtml_(r.name) + '</b></td>' +
+          '<td>' + (r.role ? '<span class="dx-badge dx-b-role">' + escapeHtml_(r.role) + '</span><br>' : '') + escapeHtml_(r.school) + '</td>' +
+          '<td><a class="info-link" href="mailto:' + escapeHtml_(r.contact) + '">' + escapeHtml_(r.contact) + '</a><br><small>' + escapeHtml_(r.phone) + '</small></td>' +
+          '<td><span class="dx-badge ' + cls + '">' + escapeHtml_(r.status) + '</span></td><td>' + actions + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  }
+
+  function reviewRequest(row, action) {
+    var verb = action === 'approve' ? 'Approve this request and create the account?' : 'Reject this request?';
+    if (!confirm(verb)) return;
+    google.script.run
+      .withSuccessHandler(function (res) { dxMsg_('dx-req-msg', res.message, true); loadRequests(); loadUsers(); })
+      .withFailureHandler(function (err) { dxMsg_('dx-req-msg', err.message, false); })
+      .adminReviewRequest(sessionToken, row, action);
+  }
+
+  function resetVisitsAdmin() {
+    if (!confirm('Reset the all-time total visits counter to 0? This cannot be undone.')) return;
+    google.script.run
+      .withSuccessHandler(function () { dxMsg_('dx-sys-msg', 'Visit counter reset to 0.', true); })
+      .withFailureHandler(function (err) { dxMsg_('dx-sys-msg', err.message, false); })
+      .resetVisitCounter(sessionToken);
+  }
+
+  /**
+   * 10. SITE-WIDE SEARCH
+   */
+  var siteSearchIndex = null;
+
+  function buildSiteSearchIndex() {
+    var items = [];
+    document.querySelectorAll('.page-content .profile-matrix-item, .page-content .admission-card').forEach(function(card) {
+      var titleEl = card.querySelector('.matrix-item-bold-title, h3, .admission-col-right h3');
+      if (!titleEl) return;
+      var title = titleEl.textContent.trim();
+      if (!title) return;
+
+      var pageAncestor = card.closest('.page-content');
+      if (!pageAncestor) return;
+      var listingPageId = pageAncestor.id.replace(/^page-/, '');
+
+      var directTarget = null;
+      var onclickAttr = card.getAttribute('onclick') || '';
+      var m = onclickAttr.match(/showPage\('([^']+)'\)/);
+      if (m) directTarget = m[1];
+
+      var logoEl = card.querySelector('.matrix-item-logo, .logo-box img');
+      var logoSrc = logoEl ? logoEl.src : null;
+
+      items.push({
+        title: title,
+        listingPageId: listingPageId,
+        directTarget: directTarget,
+        logo: logoSrc,
+        cardEl: card
+      });
+    });
+    return items;
+  }
+
+  function openSiteSearch() {
+    if (!siteSearchIndex) siteSearchIndex = buildSiteSearchIndex();
+    var overlay = document.getElementById('site-search-overlay');
+    overlay.classList.add('open');
+    var input = document.getElementById('site-search-input');
+    input.value = '';
+    runSiteSearch('');
+    setTimeout(function() { input.focus(); }, 50);
+    document.addEventListener('keydown', siteSearchKeydownHandler);
+  }
+
+  function closeSiteSearch() {
+    document.getElementById('site-search-overlay').classList.remove('open');
+    document.removeEventListener('keydown', siteSearchKeydownHandler);
+  }
+
+  function siteSearchKeydownHandler(e) {
+    if (e.key === 'Escape') closeSiteSearch();
+  }
+
+  function highlightMatch_(text, query) {
+    if (!query) return escapeHtml_(text);
+    var idx = text.toLowerCase().indexOf(query.toLowerCase());
+    if (idx === -1) return escapeHtml_(text);
+    return escapeHtml_(text.slice(0, idx)) + '<mark>' + escapeHtml_(text.slice(idx, idx + query.length)) + '</mark>' + escapeHtml_(text.slice(idx + query.length));
+  }
+
+  function runSiteSearch(query) {
+    var resultsEl = document.getElementById('site-search-results');
+    query = (query || '').trim();
+
+    if (!query) {
+      resultsEl.innerHTML = '<div class="site-search-hint">Start typing to search across the whole portal.</div>';
+      return;
+    }
+
+    var matches = siteSearchIndex.filter(function(item) {
+      return item.title.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+    }).slice(0, 30);
+
+    if (!matches.length) {
+      resultsEl.innerHTML = '<div class="site-search-empty">No matches for "' + escapeHtml_(query) + '".</div>';
+      return;
+    }
+
+    resultsEl.innerHTML = matches.map(function(item, idx) {
+      var sectionLabel = pageLabel_(item.directTarget || item.listingPageId);
+      var logoHtml = item.logo ? '<img class="site-search-result-logo" src="' + item.logo + '" alt="">' : '';
+      return '<div class="site-search-result-item" data-idx="' + idx + '" onclick="goToSiteSearchResult(' + idx + ')">' +
+        logoHtml +
+        '<div class="site-search-result-text">' +
+          '<div class="site-search-result-title">' + highlightMatch_(item.title, query) + '</div>' +
+          '<div class="site-search-result-section">' + escapeHtml_(sectionLabel) + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    resultsEl._matches = matches;
+  }
+
+  function goToSiteSearchResult(idx) {
+    var resultsEl = document.getElementById('site-search-results');
+    var item = resultsEl._matches[idx];
+    if (!item) return;
+
+    closeSiteSearch();
+
+    var targetPage = item.directTarget || item.listingPageId;
+    showPage(targetPage);
+
+    if (!item.directTarget) {
+      setTimeout(function() {
+        item.cardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        item.cardEl.style.transition = 'box-shadow 0.3s';
+        item.cardEl.style.boxShadow = '0 0 0 3px var(--ceu-gold)';
+        setTimeout(function() { item.cardEl.style.boxShadow = ''; }, 1800);
+      }, 150);
+    }
+  }
+
+  // Keyboard shortcut: Ctrl/Cmd+K opens search from anywhere in the portal
+  document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      if (document.getElementById('main-app').style.display !== 'none') {
+        e.preventDefault();
+        openSiteSearch();
+      }
+    }
+  });
+
+  /**
+   * 11. ACCESS REQUEST POPUP (Register)
+   */
+  let accessType = 'register';
+
+  function openAccessForm(type) {
+    accessType = type;
+    const reg = type === 'register';
+    document.getElementById('access-title').textContent = reg ? 'Request an Account' : 'Need help signing in?';
+    document.getElementById('access-sub').textContent = reg
+      ? 'Fill in your details and the CEU team will set up your account. Use your school email (name@school.edu.moe.bn).'
+      : 'Enter your details and the CEU team will help you.';
+    const role = document.getElementById('acc-role');
+    role.style.display = reg ? 'block' : 'none';
+    role.required = reg;
+    document.getElementById('access-form').reset();
+    document.getElementById('access-msg').textContent = '';
+    document.getElementById('access-submit').disabled = false;
+    document.getElementById('access-overlay').style.display = 'flex';
+  }
+
+  function closeAccessForm() {
+    document.getElementById('access-overlay').style.display = 'none';
+  }
+
+  function submitAccessForm() {
+    const msg = document.getElementById('access-msg');
+    const btn = document.getElementById('access-submit');
+    btn.disabled = true;
+    msg.style.color = '#3F6E68';
+    msg.textContent = 'Sending...';
+    google.script.run
+      .withSuccessHandler(function () {
+        msg.style.color = '#078C86';
+        msg.textContent = 'Sent! The CEU team will contact you by email.';
+        setTimeout(closeAccessForm, 2500);
+      })
+      .withFailureHandler(function (err) {
+        msg.style.color = '#c0392b';
+        msg.textContent = err.message || 'Could not send. Please try again.';
+        btn.disabled = false;
+      })
+      .submitAccessRequest({
+        type: accessType,
+        name: document.getElementById('acc-name').value,
+        role: document.getElementById('acc-role').value,
+        school: document.getElementById('acc-school').value,
+        contact: document.getElementById('acc-contact').value,
+        phone: document.getElementById('acc-phone').value
+      });
+  }
+</script> <script>
+/* Adds Instagram pills (same look as Private Sectors) to cards that have one */
+(function () {
+  var ICONS = {
+    email: 'M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z',
+    website: 'M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z',
+    instagram: 'M12 2c2.717 0 3.056.01 4.122.06 1.065.05 1.79.217 2.428.465.66.254 1.216.598 1.772 1.153a4.908 4.908 0 0 1 1.153 1.772c.247.637.415 1.363.465 2.428.047 1.066.06 1.405.06 4.122 0 2.717-.01 3.056-.06 4.122-.05 1.065-.218 1.79-.465 2.428a4.883 4.883 0 0 1-1.153 1.772 4.915 4.915 0 0 1-1.772 1.153c-.637.247-1.363.415-2.428.465-1.066.047-1.405.06-4.122.06-2.717 0-3.056-.01-4.122-.06-1.065-.05-1.79-.218-2.428-.465a4.89 4.89 0 0 1-1.772-1.153 4.904 4.904 0 0 1-1.153-1.772c-.248-.637-.415-1.363-.465-2.428C2.013 15.056 2 14.717 2 12c0-2.717.01-3.056.06-4.122.05-1.066.217-1.79.465-2.428a4.88 4.88 0 0 1 1.153-1.772A4.897 4.897 0 0 1 5.45 2.525c.638-.248 1.362-.415 2.428-.465C8.944 2.013 9.283 2 12 2zm0 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8.25a3.25 3.25 0 1 1 0-6.5 3.25 3.25 0 0 1 0 6.5zm5.155-9.5a1.17 1.17 0 1 0 0 2.34 1.17 1.17 0 0 0 0-2.34z'
+  };
+
+var INSTAGRAM = {
+  'maktab duli pengiran muda al-muhtadee billah': 'maktabduli_news',
+  'pusat tingkatan enam meragang': 'pte.meragang',
+  'maktab sains paduka seri begawan sultan': 'mspsbs.official',
+  'pusat tingkatan enam sengkurong': 'pte_sengkurong',
+  'pusat tingkatan enam tutong': 'pte.tutong',
+  'pusat tingkatan enam belait': 'pteb.kb',
+  'politeknik brunei (pb)': 'politeknikbrunei',
+  'pusat pembangunan belia (ppb)': 'pusat_pembangunan_belia',
+  'laksamana college of business': 'lcb_brunei',
+  'kolej international graduate studies': 'kigsbrunei',
+  'cosmopolitan college of commerce and technology': 'cosmopolitancollegebn',
+  'jpmc college of health sciences': 'jpmcbruneicollege',
+  'micronet international college': 'micronetbruneiig',
+  'kemuda institute': 'kemudainstitute',
+  'hadtech college': 'hadtech.college',
+  'bicpa academy': 'bicpa',
+  'uniklearn (an-nur harapan)': 'uniklearn',
+  'findlay education services': 'findlaybsb',
+  'hrd services (hrds)': 'hrdseducation',
+  'royal brunei airlines': 'royalbruneiair'
+};
+
+  function makePill(kind, href, label) {
+    var a = document.createElement('a');
+    a.className = 'contact-pill pill-' + kind;
+    a.href = href;
+    if (kind !== 'email') { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+    a.onclick = function (e) { e.stopPropagation(); };
+    a.innerHTML = '<span class="contact-pill-icon"><svg viewBox="0 0 24 24"><path d="' + ICONS[kind] + '"/></svg></span>';
+    a.appendChild(document.createTextNode(label));
+    return a;
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.profile-matrix-item').forEach(function (card) {
+      var titleEl = card.querySelector('.matrix-item-bold-title');
+      if (!titleEl) return;
+      var handle = INSTAGRAM[titleEl.textContent.replace(/\s+/g, ' ').trim().toLowerCase()];
+      if (!handle || card.querySelector('.pill-instagram')) return;
+
+      var row = card.querySelector('.contact-pill-row');
+      if (!row) {
+        row = document.createElement('div');
+        row.className = 'contact-pill-row';
+        var icons = card.querySelector('.matrix-action-icons-row');
+        if (icons) {                       // Findlay / HRDS: turn the round icons into pills
+          icons.querySelectorAll('a').forEach(function (a) {
+            var href = a.getAttribute('href') || '';
+            if (href.indexOf('mailto:') === 0) row.appendChild(makePill('email', href, href.slice(7)));
+            else row.appendChild(makePill('website', href, 'Website'));
+          });
+          icons.replaceWith(row);
+        } else {                           // Sixth form centres: no pill row yet
+          var meta = card.querySelector('.matrix-item-meta-text');
+          (meta || titleEl).insertAdjacentElement('afterend', row);
+        }
+      }
+
+      // remove the old external "Visit Website" buttons (the pills replace them)
+      card.querySelectorAll('a > button.matrix-rect-action-btn').forEach(function (b) { b.parentNode.remove(); });
+
+      // Instagram goes after email, before website
+      row.insertBefore(makePill('instagram', 'https://www.instagram.com/' + handle, '@' + handle), row.querySelector('.pill-website'));
+    });
+  });
+})();
+</script> <script>
+/* Fills the "Visit Website" placeholders and adds website pills on listing cards */
+(function () {
+  var SITES = {
+    /* private colleges: domains taken from their email addresses */
+    'lcb-detail':       'https://laksamanacollege.edu.bn',
+    'kigs-detail':      'https://igsbrunei.edu.bn',
+    'ccct-detail':      'https://cosmopolitan.edu.bn',
+    'jpmc-detail':      'https://jchs.edu.bn',
+    'micronet-detail':  'https://micronet.com.bn',
+    'kemuda-detail':    'https://kemudainstitute.com',
+    'hadtech-detail':   'https://hadtech.edu.bn',
+
+    /* already linked on their listing cards, but the detail pages still had the placeholder */
+    'ubd-detail':       'https://www.ubd.edu.bn',
+    'utb-detail':       'https://www.utb.edu.bn',
+    'unissa-detail':    'https://www.unissa.edu.bn',
+    'kupusb-detail':    'https://www.kupu-sb.edu.bn/',
+    'ibte-detail':      'https://ibte.edu.bn',
+    'pb-detail':        'https://www.pb.edu.bn',
+    'l3c-detail':       'https://l3c.moe.gov.bn',
+    'kesenian-detail':  'https://www.kkbs.gov.bn',
+    'bicpa-detail':     'https://bicpabrunei.com',
+    'uniklearn-detail': 'https://www.annurharapan.com',
+    'findlay-detail':   'https://findlaybsb.com',
+    'hrds-detail':      'https://hrdseducation.com',
+    'page-rbpf':        'https://www.police.gov.bn',
+    'page-bomba':       'https://www.fire-rescue.gov.bn',
+    'page-penjara':     'https://www.prisons.gov.bn',
+    'moe-gov-detail':   'https://www.moe.gov.bn',
+    'mindef-gov-detail':'https://www.mindef.gov.bn',
+    'india-foreign-detail': 'https://www.hcindiabrunei.gov.in'
+  };
+
+  var WEB_ICON = 'M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z';
+
+  function pageEl(key) {
+    return document.getElementById('page-' + key) || document.getElementById('page-page-' + key);
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+
+    /* 1. detail pages: replace the https://... placeholder */
+    Object.keys(SITES).forEach(function (key) {
+      var page = pageEl(key);
+      var btn = page && page.querySelector('.profile-hero-btn');
+      if (btn && btn.getAttribute('href') === 'https://...') btn.setAttribute('href', SITES[key]);
+    });
+
+    /* 2. hide any placeholder button that is still unfilled, so nobody clicks a dead link */
+    document.querySelectorAll('.profile-hero-btn[href="https://..."]').forEach(function (b) {
+      b.style.display = 'none';
+    });
+
+    /* 3. listing cards: add a Website pill where one is missing */
+    document.querySelectorAll('.profile-matrix-item').forEach(function (card) {
+      var m = (card.getAttribute('onclick') || '').match(/showPage\('([^']+)'\)/);
+      var url = m && SITES[m[1]];
+      if (!url || card.querySelector('.pill-website')) return;
+
+      var row = card.querySelector('.contact-pill-row');
+      if (!row) return;
+
+      var a = document.createElement('a');
+      a.className = 'contact-pill pill-website';
+      a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      a.onclick = function (e) { e.stopPropagation(); };
+      a.innerHTML = '<span class="contact-pill-icon"><svg viewBox="0 0 24 24"><path d="' + WEB_ICON + '"/></svg></span>Website';
+      row.appendChild(a);
+    });
+  });
+})();
+</script>
